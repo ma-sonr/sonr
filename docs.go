@@ -37,7 +37,8 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     },
                     "500": {
@@ -63,7 +64,8 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     },
                     "500": {
@@ -89,7 +91,8 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     },
                     "500": {
@@ -115,7 +118,8 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     },
                     "500": {
@@ -141,7 +145,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgCreateBucketResponse"
                         }
                     },
                     "500": {
@@ -167,7 +171,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgDeactivateBucketResponse"
                         }
                     },
                     "400": {
@@ -199,7 +203,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgUpdateBucketResponse"
                         }
                     },
                     "500": {
@@ -221,11 +225,22 @@ const docTemplate = `{
                     "Channel"
                 ],
                 "summary": "Create Channel",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgCreateChannel"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgCreateChannelResponse"
                         }
                     },
                     "500": {
@@ -247,11 +262,22 @@ const docTemplate = `{
                     "Channel"
                 ],
                 "summary": "Deactivate Channel",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgDeactivateChannel"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgDeactivateChannelResponse"
                         }
                     },
                     "500": {
@@ -273,11 +299,22 @@ const docTemplate = `{
                     "Channel"
                 ],
                 "summary": "Update Channel",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgUpdateChannel"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgUpdateChannelResponse"
                         }
                     },
                     "500": {
@@ -380,11 +417,22 @@ const docTemplate = `{
                     "Object"
                 ],
                 "summary": "Create Object",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgCreateObject"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgCreateObjectResponse"
                         }
                     },
                     "500": {
@@ -406,11 +454,22 @@ const docTemplate = `{
                     "Object"
                 ],
                 "summary": "Deactivate Object",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgDeactivateObject"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgDeactivateObjectResponse"
                         }
                     },
                     "500": {
@@ -432,11 +491,22 @@ const docTemplate = `{
                     "Object"
                 ],
                 "summary": "Update Object",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgUpdateObject"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgUpdateObjectResponse"
                         }
                     },
                     "500": {
@@ -458,11 +528,22 @@ const docTemplate = `{
                     "Registry"
                 ],
                 "summary": "Buy an Alias for an App",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgBuyNameAlias"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgBuyAppAliasResponse"
                         }
                     },
                     "500": {
@@ -484,11 +565,22 @@ const docTemplate = `{
                     "Registry"
                 ],
                 "summary": "Buy an Alias for a User",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgBuyNameAlias"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgBuyNameAliasResponse"
                         }
                     },
                     "500": {
@@ -510,11 +602,22 @@ const docTemplate = `{
                     "Registry"
                 ],
                 "summary": "Create WhoIs Entry",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgCreateWhoIs"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgCreateWhoIsResponse"
                         }
                     },
                     "500": {
@@ -536,11 +639,22 @@ const docTemplate = `{
                     "Registry"
                 ],
                 "summary": "Deactivate WhoIs Entry",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgDeactivateWhoIs"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgDeactivateWhoIsResponse"
                         }
                     },
                     "500": {
@@ -562,11 +676,22 @@ const docTemplate = `{
                     "Registry"
                 ],
                 "summary": "Transfer an App Alias",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgTransferAppAlias"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgTransferAppAliasResponse"
                         }
                     },
                     "500": {
@@ -588,11 +713,22 @@ const docTemplate = `{
                     "Registry"
                 ],
                 "summary": "Transfer a Name alias",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgTransferNameAlias"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgTransferNameAliasResponse"
                         }
                     },
                     "500": {
@@ -614,11 +750,22 @@ const docTemplate = `{
                     "Registry"
                 ],
                 "summary": "Update WhoIs Entry",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgUpdateWhoIs"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/types.MsgUpdateWhoIsResponse"
                         }
                     },
                     "500": {
@@ -627,6 +774,634 @@ const docTemplate = `{
                             "type": "string"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "types.BucketDoc": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "description": "Description is a human-readable description of the bucket.",
+                    "type": "string"
+                },
+                "did": {
+                    "description": "Did is the identifier of the bucket.",
+                    "type": "string"
+                },
+                "label": {
+                    "description": "Label is human-readable name of the bucket.",
+                    "type": "string"
+                },
+                "object_dids": {
+                    "description": "Objects are stored in a tree structure.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "type": {
+                    "description": "Type is the kind of bucket for either App specific or User specific data.",
+                    "type": "integer"
+                }
+            }
+        },
+        "types.ChannelDoc": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "description": "Description is a human-readable description of the channel.",
+                    "type": "string"
+                },
+                "did": {
+                    "description": "Did is the identifier of the channel.",
+                    "type": "string"
+                },
+                "label": {
+                    "description": "Label is human-readable name of the channel.",
+                    "type": "string"
+                },
+                "registered_object": {
+                    "description": "RegisterdObject is the object that is registered as the payload for the channel.",
+                    "$ref": "#/definitions/types.ObjectDoc"
+                }
+            }
+        },
+        "types.HowIs": {
+            "type": "object",
+            "properties": {
+                "channel": {
+                    "description": "ChannelDoc is the structure of the channel encoded as JSON",
+                    "$ref": "#/definitions/types.ChannelDoc"
+                },
+                "creator": {
+                    "description": "Document is the DID Document of the registered name and account encoded as JSON",
+                    "type": "string"
+                },
+                "did": {
+                    "description": "Did is the DID of the channel",
+                    "type": "string"
+                },
+                "is_active": {
+                    "description": "Is Active is the status of the DID Document",
+                    "type": "boolean"
+                },
+                "timestamp": {
+                    "description": "Timestamp is the time of the last update of the DID Document",
+                    "type": "integer"
+                }
+            }
+        },
+        "types.MsgBuyAppAliasResponse": {
+            "type": "object",
+            "properties": {
+                "did": {
+                    "type": "string"
+                },
+                "who_is": {
+                    "$ref": "#/definitions/types.WhoIs"
+                }
+            }
+        },
+        "types.MsgBuyNameAlias": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "creator": {
+                    "type": "string"
+                },
+                "did": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.MsgBuyNameAliasResponse": {
+            "type": "object",
+            "properties": {
+                "did": {
+                    "type": "string"
+                },
+                "who_is": {
+                    "$ref": "#/definitions/types.WhoIs"
+                }
+            }
+        },
+        "types.MsgCreateBucketResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Code of the response",
+                    "type": "integer"
+                },
+                "message": {
+                    "description": "Message of the response",
+                    "type": "string"
+                },
+                "which_is": {
+                    "description": "Whichis response of the ObjectDoc",
+                    "$ref": "#/definitions/types.WhichIs"
+                }
+            }
+        },
+        "types.MsgCreateChannel": {
+            "type": "object",
+            "properties": {
+                "creator": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "object_to_register": {
+                    "$ref": "#/definitions/types.ObjectDoc"
+                }
+            }
+        },
+        "types.MsgCreateChannelResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Code of the response",
+                    "type": "integer"
+                },
+                "how_is": {
+                    "description": "HowIs of the Channel",
+                    "$ref": "#/definitions/types.HowIs"
+                },
+                "message": {
+                    "description": "Message of the response",
+                    "type": "string"
+                }
+            }
+        },
+        "types.MsgCreateObject": {
+            "type": "object",
+            "properties": {
+                "creator": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "initial_fields": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.TypeField"
+                    }
+                },
+                "label": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.MsgCreateObjectResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Code of the response",
+                    "type": "integer"
+                },
+                "message": {
+                    "description": "Message of the response",
+                    "type": "string"
+                },
+                "what_is": {
+                    "description": "WhatIs of the Channel",
+                    "$ref": "#/definitions/types.WhatIs"
+                }
+            }
+        },
+        "types.MsgCreateWhoIs": {
+            "type": "object",
+            "properties": {
+                "did_document": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "owner": {
+                    "type": "string"
+                },
+                "whois_type": {
+                    "type": "integer"
+                }
+            }
+        },
+        "types.MsgCreateWhoIsResponse": {
+            "type": "object",
+            "properties": {
+                "did": {
+                    "type": "string"
+                },
+                "who_is": {
+                    "$ref": "#/definitions/types.WhoIs"
+                }
+            }
+        },
+        "types.MsgDeactivateBucketResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Code of the response",
+                    "type": "integer"
+                },
+                "message": {
+                    "description": "Message of the response",
+                    "type": "string"
+                }
+            }
+        },
+        "types.MsgDeactivateChannel": {
+            "type": "object",
+            "properties": {
+                "creator": {
+                    "type": "string"
+                },
+                "did": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.MsgDeactivateChannelResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Code of the response",
+                    "type": "integer"
+                },
+                "message": {
+                    "description": "Message of the response",
+                    "type": "string"
+                }
+            }
+        },
+        "types.MsgDeactivateObject": {
+            "type": "object",
+            "properties": {
+                "creator": {
+                    "type": "string"
+                },
+                "did": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.MsgDeactivateObjectResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Code of the response",
+                    "type": "integer"
+                },
+                "message": {
+                    "description": "Message of the response",
+                    "type": "string"
+                }
+            }
+        },
+        "types.MsgDeactivateWhoIs": {
+            "type": "object",
+            "properties": {
+                "did": {
+                    "type": "string"
+                },
+                "owner": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.MsgDeactivateWhoIsResponse": {
+            "type": "object",
+            "properties": {
+                "did": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "types.MsgTransferAppAlias": {
+            "type": "object",
+            "properties": {
+                "alias": {
+                    "type": "string"
+                },
+                "creator": {
+                    "type": "string"
+                },
+                "did": {
+                    "type": "string"
+                },
+                "recipient": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.MsgTransferAppAliasResponse": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "who_is": {
+                    "$ref": "#/definitions/types.WhoIs"
+                }
+            }
+        },
+        "types.MsgTransferNameAlias": {
+            "type": "object",
+            "properties": {
+                "alias": {
+                    "type": "string"
+                },
+                "creator": {
+                    "type": "string"
+                },
+                "did": {
+                    "type": "string"
+                },
+                "recipient": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.MsgTransferNameAliasResponse": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "who_is": {
+                    "$ref": "#/definitions/types.WhoIs"
+                }
+            }
+        },
+        "types.MsgUpdateBucketResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Code of the response",
+                    "type": "integer"
+                },
+                "message": {
+                    "description": "Message of the response",
+                    "type": "string"
+                },
+                "which_is": {
+                    "description": "Whichis response of the ObjectDoc",
+                    "$ref": "#/definitions/types.WhichIs"
+                }
+            }
+        },
+        "types.MsgUpdateChannel": {
+            "type": "object",
+            "properties": {
+                "creator": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "did": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "object_to_register": {
+                    "$ref": "#/definitions/types.ObjectDoc"
+                }
+            }
+        },
+        "types.MsgUpdateChannelResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Code of the response",
+                    "type": "integer"
+                },
+                "message": {
+                    "description": "Message of the response",
+                    "type": "string"
+                }
+            }
+        },
+        "types.MsgUpdateObject": {
+            "type": "object",
+            "properties": {
+                "added_fields": {
+                    "description": "Added fields to the object",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.TypeField"
+                    }
+                },
+                "cid": {
+                    "description": "Contend Identifier of the object",
+                    "type": "string"
+                },
+                "creator": {
+                    "type": "string"
+                },
+                "label": {
+                    "description": "Label of the Object",
+                    "type": "string"
+                },
+                "removed_fields": {
+                    "description": "Removed fields from the object",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.TypeField"
+                    }
+                }
+            }
+        },
+        "types.MsgUpdateObjectResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Code of the response",
+                    "type": "integer"
+                },
+                "message": {
+                    "description": "Message of the response",
+                    "type": "string"
+                },
+                "what_is": {
+                    "description": "WhatIs of the Channel",
+                    "$ref": "#/definitions/types.WhatIs"
+                }
+            }
+        },
+        "types.MsgUpdateWhoIs": {
+            "type": "object",
+            "properties": {
+                "did": {
+                    "type": "string"
+                },
+                "did_document": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "owner": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.MsgUpdateWhoIsResponse": {
+            "type": "object",
+            "properties": {
+                "did": {
+                    "type": "string"
+                },
+                "who_is": {
+                    "$ref": "#/definitions/types.WhoIs"
+                }
+            }
+        },
+        "types.ObjectDoc": {
+            "type": "object",
+            "properties": {
+                "bucket_did": {
+                    "description": "Bucket is the did of the bucket that contains this object.",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Description is a human-readable description of the bucket.",
+                    "type": "string"
+                },
+                "did": {
+                    "description": "Did is the identifier of the object.",
+                    "type": "string"
+                },
+                "fields": {
+                    "description": "Fields are the fields associated with the object.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.TypeField"
+                    }
+                },
+                "label": {
+                    "description": "Label is human-readable name of the bucket.",
+                    "type": "string"
+                }
+            }
+        },
+        "types.TypeField": {
+            "type": "object",
+            "properties": {
+                "kind": {
+                    "description": "Type is the type of the field.",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "Name is the name of the field.",
+                    "type": "string"
+                }
+            }
+        },
+        "types.WhatIs": {
+            "type": "object",
+            "properties": {
+                "creator": {
+                    "description": "Creator is the DID of the creator",
+                    "type": "string"
+                },
+                "did": {
+                    "description": "DID is the DID of the object",
+                    "type": "string"
+                },
+                "is_active": {
+                    "description": "IsActive is the status of the DID Document",
+                    "type": "boolean"
+                },
+                "object_doc": {
+                    "description": "Object_doc is the object document",
+                    "$ref": "#/definitions/types.ObjectDoc"
+                },
+                "timestamp": {
+                    "description": "Timestamp is the time of the last update of the DID Document",
+                    "type": "integer"
+                }
+            }
+        },
+        "types.WhichIs": {
+            "type": "object",
+            "properties": {
+                "bucket": {
+                    "description": "Bucket is the document of the bucket.",
+                    "$ref": "#/definitions/types.BucketDoc"
+                },
+                "creator": {
+                    "description": "Creator is the Account that created the bucket.",
+                    "type": "string"
+                },
+                "did": {
+                    "description": "DID is the DID of the bucket.",
+                    "type": "string"
+                },
+                "is_active": {
+                    "description": "IsActive is the status of the DID Document",
+                    "type": "boolean"
+                },
+                "timestamp": {
+                    "description": "Timestamp is the time of the last update of the DID Document",
+                    "type": "integer"
+                }
+            }
+        },
+        "types.WhoIs": {
+            "type": "object",
+            "properties": {
+                "alias": {
+                    "description": "Alias is the list of registered ` + "`" + `alsoKnownAs` + "`" + ` identifiers of the User or Application",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "controllers": {
+                    "description": "Credentials are the biometric info of the registered name and account encoded with public key",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "did_document": {
+                    "description": "DIDDocument is the bytes representation of DIDDocument within the WhoIs",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "is_active": {
+                    "description": "IsActive is the status of the DID Document",
+                    "type": "boolean"
+                },
+                "owner": {
+                    "description": "Owner is the top level DID of the User or Application derived from the multisignature wallet.",
+                    "type": "string"
+                },
+                "timestamp": {
+                    "description": "Timestamp is the time of the last update of the DID Document",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "Type is the type of the registered name",
+                    "type": "integer"
                 }
             }
         }
