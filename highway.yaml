@@ -81,6 +81,22 @@ definitions:
       who_is:
         $ref: '#/definitions/types.WhoIs'
     type: object
+  types.MsgCreateBucket:
+    properties:
+      creator:
+        type: string
+      description:
+        type: string
+      initial_object_dids:
+        description: Provided initial objects for the bucket
+        items:
+          type: string
+        type: array
+      kind:
+        type: string
+      label:
+        type: string
+    type: object
   types.MsgCreateBucketResponse:
     properties:
       code:
@@ -158,6 +174,13 @@ definitions:
         type: string
       who_is:
         $ref: '#/definitions/types.WhoIs'
+    type: object
+  types.MsgDeactivateBucket:
+    properties:
+      creator:
+        type: string
+      did:
+        type: string
     type: object
   types.MsgDeactivateBucketResponse:
     properties:
@@ -249,6 +272,27 @@ definitions:
         type: boolean
       who_is:
         $ref: '#/definitions/types.WhoIs'
+    type: object
+  types.MsgUpdateBucket:
+    properties:
+      added_object_dids:
+        description: Added Objects
+        items:
+          type: string
+        type: array
+      creator:
+        type: string
+      description:
+        description: New bucket description
+        type: string
+      label:
+        description: The Bucket label
+        type: string
+      removed_object_dids:
+        description: Removed Objects
+        items:
+          type: string
+        type: array
     type: object
   types.MsgUpdateBucketResponse:
     properties:
@@ -529,6 +573,13 @@ paths:
     post:
       description: CreateBucket creates a new bucket for a registered application
         via HTTP.
+      parameters:
+      - description: Parameters
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.MsgCreateBucket'
       produces:
       - application/json
       responses:
@@ -547,6 +598,13 @@ paths:
     post:
       description: DeactivateBucket disables a bucket for a registered application
         via HTTP.
+      parameters:
+      - description: Parameters
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.MsgDeactivateBucket'
       produces:
       - application/json
       responses:
@@ -569,6 +627,13 @@ paths:
     post:
       description: UpdateBucket updates a bucket for a registered application via
         HTTP.
+      parameters:
+      - description: Parameters
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.MsgUpdateBucket'
       produces:
       - application/json
       responses:

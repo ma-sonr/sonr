@@ -141,6 +141,17 @@ const docTemplate = `{
                     "Bucket"
                 ],
                 "summary": "Create Bucket",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgCreateBucket"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -167,6 +178,17 @@ const docTemplate = `{
                     "Bucket"
                 ],
                 "summary": "Deactivate Bucket",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgDeactivateBucket"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -199,6 +221,17 @@ const docTemplate = `{
                     "Bucket"
                 ],
                 "summary": "Update Bucket",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MsgUpdateBucket"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -892,6 +925,30 @@ const docTemplate = `{
                 }
             }
         },
+        "types.MsgCreateBucket": {
+            "type": "object",
+            "properties": {
+                "creator": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "initial_object_dids": {
+                    "description": "Provided initial objects for the bucket",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "kind": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                }
+            }
+        },
         "types.MsgCreateBucketResponse": {
             "type": "object",
             "properties": {
@@ -1005,6 +1062,17 @@ const docTemplate = `{
                 },
                 "who_is": {
                     "$ref": "#/definitions/types.WhoIs"
+                }
+            }
+        },
+        "types.MsgDeactivateBucket": {
+            "type": "object",
+            "properties": {
+                "creator": {
+                    "type": "string"
+                },
+                "did": {
+                    "type": "string"
                 }
             }
         },
@@ -1144,6 +1212,36 @@ const docTemplate = `{
                 },
                 "who_is": {
                     "$ref": "#/definitions/types.WhoIs"
+                }
+            }
+        },
+        "types.MsgUpdateBucket": {
+            "type": "object",
+            "properties": {
+                "added_object_dids": {
+                    "description": "Added Objects",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "creator": {
+                    "type": "string"
+                },
+                "description": {
+                    "description": "New bucket description",
+                    "type": "string"
+                },
+                "label": {
+                    "description": "The Bucket label",
+                    "type": "string"
+                },
+                "removed_object_dids": {
+                    "description": "Removed Objects",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
