@@ -47,7 +47,7 @@ require (
 	github.com/prometheus/client_golang v1.12.2
 	github.com/shengdoushi/base58 v1.0.0
 	github.com/sonr-io/keyring v1.2.2-0.20220701165800-b4428a8aad16 // indirect
-	github.com/sonr-io/multi-party-sig v0.7.0
+	github.com/sonr-io/multi-party-sig v0.7.1-0.20220701215033-0aee68369920
 	github.com/spf13/cast v1.4.1
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.10.1

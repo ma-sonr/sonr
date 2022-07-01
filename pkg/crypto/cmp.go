@@ -11,7 +11,7 @@ import (
 	"github.com/sonr-io/multi-party-sig/protocols/cmp"
 )
 
-func cmpKeygen(id party.ID, ids party.IDSlice, n *Network, threshold int, pl *pool.Pool) (*cmp.Config, error) {
+func cmpKeygen(id party.ID, ids party.IDSlice, n *Network, threshold int, pl pool.Pool) (*cmp.Config, error) {
 	h, err := protocol.NewMultiHandler(cmp.Keygen(curve.Secp256k1{}, id, ids, threshold, pl), nil)
 	if err != nil {
 		return nil, err
@@ -26,7 +26,7 @@ func cmpKeygen(id party.ID, ids party.IDSlice, n *Network, threshold int, pl *po
 	return conf, nil
 }
 
-func cmpSign(c *cmp.Config, m []byte, signers party.IDSlice, n *Network, pl *pool.Pool) (*ecdsa.Signature, error) {
+func cmpSign(c *cmp.Config, m []byte, signers party.IDSlice, n *Network, pl pool.Pool) (*ecdsa.Signature, error) {
 	h, err := protocol.NewMultiHandler(cmp.Sign(c, signers, m, pl), nil)
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func cmpSign(c *cmp.Config, m []byte, signers party.IDSlice, n *Network, pl *poo
 	return signature, nil
 }
 
-func cmpPreSign(c *cmp.Config, signers party.IDSlice, n *Network, pl *pool.Pool) (*ecdsa.PreSignature, error) {
+func cmpPreSign(c *cmp.Config, signers party.IDSlice, n *Network, pl pool.Pool) (*ecdsa.PreSignature, error) {
 	h, err := protocol.NewMultiHandler(cmp.Presign(c, signers, pl), nil)
 	if err != nil {
 		return nil, err
@@ -61,7 +61,7 @@ func cmpPreSign(c *cmp.Config, signers party.IDSlice, n *Network, pl *pool.Pool)
 	return preSignature, nil
 }
 
-func cmpPreSignOnline(c *cmp.Config, preSignature *ecdsa.PreSignature, m []byte, n *Network, pl *pool.Pool) (*ecdsa.Signature, error) {
+func cmpPreSignOnline(c *cmp.Config, preSignature *ecdsa.PreSignature, m []byte, n *Network, pl pool.Pool) (*ecdsa.Signature, error) {
 	h, err := protocol.NewMultiHandler(cmp.PresignOnline(c, preSignature, m, pl), nil)
 	if err != nil {
 		return nil, err

@@ -2493,6 +2493,8 @@ github.com/sonr-io/keyring v1.2.2-0.20220701165800-b4428a8aad16 h1:muH+7I7QoOzVO
 github.com/sonr-io/keyring v1.2.2-0.20220701165800-b4428a8aad16/go.mod h1:dwyQStd/Ds1kIAABy34eceeYk0lvEmjeDneq0C377yc=
 github.com/sonr-io/multi-party-sig v0.7.0 h1:cRpctyTdbgeOm+JBdY/HcHv3dD7lX3JWtw+P77xmvOw=
 github.com/sonr-io/multi-party-sig v0.7.0/go.mod h1:Bl4/pohbzwlfiHpYaf9sM/hkV71u1SUPQHDEaHOamfo=
+github.com/sonr-io/multi-party-sig v0.7.1-0.20220701215033-0aee68369920 h1:1Nd5lCXSL0EvFnkpP/lv38ZAfSxTyw2D8nnW0zwmNDg=
+github.com/sonr-io/multi-party-sig v0.7.1-0.20220701215033-0aee68369920/go.mod h1:K8qbe5PolcbAgxE2uCERyOnagkE5Cv7bJbBrdbKaWSU=
 github.com/sony/gobreaker v0.4.1/go.mod h1:ZKptC7FHNvhBz7dN2LGjPVBz2sZJmc0/PkyDJOjmxWY=
 github.com/sourcegraph/annotate v0.0.0-20160123013949-f4cad6c6324d/go.mod h1:UdhH50NIW0fCiwBSr0co2m7BnFLdv4fQTgdqdJTHFeE=
 github.com/sourcegraph/go-diff v0.6.1/go.mod h1:iBszgVvyxdc8SFZ7gm69go2KDdt3ag071iBaWPF6cjs=

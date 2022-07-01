@@ -22,7 +22,7 @@ import (
 )
 
 type MPCWallet struct {
-	pool        *pool.Pool
+	pool        pool.Pool
 	ID          party.ID
 	DID         did.DID
 	DIDDocument did.Document
@@ -187,7 +187,7 @@ func (w *MPCWallet) PublicKeyProto() (*secp256k1.PubKey, error) {
 }
 
 // Refreshes all shares of an existing ECDSA private key.
-func (w *MPCWallet) Refresh(pl *pool.Pool) (*cmp.Config, error) {
+func (w *MPCWallet) Refresh(pl pool.Pool) (*cmp.Config, error) {
 	hRefresh, err := protocol.NewMultiHandler(cmp.Refresh(w.Configs[w.ID], pl), nil)
 	if err != nil {
 		return nil, err
