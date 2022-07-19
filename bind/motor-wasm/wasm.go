@@ -1,7 +1,7 @@
 //go:build wasm
 // +build wasm
 
-package main
+package mobile
 
 import (
 	"bytes"

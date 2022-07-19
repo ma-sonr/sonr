@@ -1,4 +1,7 @@
-package motor
+//go:build wasm
+// +build wasm
+
+package bind
 
 import (
 	"encoding/json"
@@ -6,7 +9,6 @@ import (
 
 	mtr "github.com/sonr-io/sonr/internal/motor"
 	apiv1 "go.buf.build/grpc/go/sonr-io/motor/api/v1"
-	_ "golang.org/x/mobile/bind"
 )
 
 var (
@@ -49,15 +51,15 @@ func CreateAccount(buf []byte) ([]byte, error) {
 }
 
 func Login(buf []byte) ([]byte, error) {
-  if instance == nil {
-    return nil, errWalletNotExists
-  }
+	if instance == nil {
+		return nil, errWalletNotExists
+	}
 
-  if res, err := instance.Login(buf); err == nil {
-    return json.Marshal(res)
-  } else {
-    return nil, err
-  }
+	if res, err := instance.Login(buf); err == nil {
+		return json.Marshal(res)
+	} else {
+		return nil, err
+	}
 }
 
 // Address returns the address of the wallet.
@@ -78,13 +80,13 @@ func Balance() int {
 }
 
 // DidDoc returns the DID document as JSON
-func DidDoc() string {
+func DidDoc() ([]byte, error) {
 	if instance == nil {
-		return ""
+		return nil, errWalletNotExists
 	}
 	buf, err := instance.DIDDocument.MarshalJSON()
 	if err != nil {
-		return ""
+		return nil, err
 	}
-	return string(buf)
+	return buf, nil
 }
