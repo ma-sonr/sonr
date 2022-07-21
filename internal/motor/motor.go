@@ -32,10 +32,28 @@ type MotorNode struct {
 	unusedShards  [][]byte
 }
 
-func EmptyMotor(id string) *MotorNode {
+func NewMobileMotor(id string) (*MotorNode, error) {
+	h, err := host.NewDefaultHost(context.Background(), config.DefaultConfig(config.Role_MOTOR))
+	if err != nil {
+		return nil, err
+	}
+
 	return &MotorNode{
 		DeviceID: id,
+		SonrHost: h,
+	}, nil
+}
+
+func NewWasmMotor(id string) (*MotorNode, error) {
+	h, err := host.NewWasmHost(context.Background(), config.DefaultConfig(config.Role_MOTOR))
+	if err != nil {
+		return nil, err
 	}
+
+	return &MotorNode{
+		DeviceID: id,
+		SonrHost: h,
+	}, nil
 }
 
 func initMotor(mtr *MotorNode, options ...crypto.WalletOption) (err error) {
@@ -68,12 +86,6 @@ func initMotor(mtr *MotorNode, options ...crypto.WalletOption) (err error) {
 		return err
 	}
 	mtr.DID = *baseDid
-
-	// It creates a new host.
-	mtr.SonrHost, err = host.NewDefaultHost(context.Background(), config.DefaultConfig(config.Role_MOTOR))
-	if err != nil {
-		return err
-	}
 
 	// Create MotorNode
 	return nil

@@ -5,18 +5,47 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"syscall/js"
 
 	"github.com/sonr-io/sonr/bind"
+	mtr "github.com/sonr-io/sonr/internal/motor"
+	apiv1 "go.buf.build/grpc/go/sonr-io/motor/api/v1"
 )
+
+func Init(buf []byte) ([]byte, error) {
+	// Unmarshal the request
+	var req apiv1.InitializeRequest
+	if err := json.Unmarshal(buf, &req); err != nil {
+		return nil, err
+	}
+
+	// Check if public key provided
+	if req.DeviceKeyprintPub == nil {
+		// Create Motor instance
+		var err error
+		bind.Instance, err = mtr.NewWasmMotor(req.DeviceId)
+		if err != nil {
+			return nil, err
+		}
+
+		// Return Initialization Response
+		resp := apiv1.InitializeResponse{
+			Success: true,
+		}
+		return json.Marshal(resp)
+	}
+	return nil, errors.New("Loading existing account not implemented")
+}
 
 type tuple struct {
 	Result []byte
 	Error  error
 }
 
+// const [res, error] = await init();
 func InitExporter() js.Func {
-	return js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	return js.FuncOf(func(this js.Value, args []js.Value) tuple {
 		b, err := json.Marshal(args[0])
 		if err != nil {
 			return tuple{
@@ -24,7 +53,7 @@ func InitExporter() js.Func {
 				Error:  err,
 			}
 		}
-		res, err := bind.Init(b)
+		res, err := Init(b)
 		if err != nil {
 			return tuple{
 				Result: nil,

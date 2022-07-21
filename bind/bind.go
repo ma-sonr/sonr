@@ -1,6 +1,3 @@
-//go:build wasm
-// +build wasm
-
 package bind
 
 import (
@@ -8,7 +5,6 @@ import (
 	"errors"
 
 	mtr "github.com/sonr-io/sonr/internal/motor"
-	apiv1 "go.buf.build/grpc/go/sonr-io/motor/api/v1"
 )
 
 var (
@@ -16,34 +12,13 @@ var (
 	errWalletNotExists = errors.New("mpc wallet does not exist")
 )
 
-var instance *mtr.MotorNode
-
-func Init(buf []byte) ([]byte, error) {
-	// Unmarshal the request
-	var req apiv1.InitializeRequest
-	if err := json.Unmarshal(buf, &req); err != nil {
-		return nil, err
-	}
-
-	// Check if public key provided
-	if req.DeviceKeyprintPub == nil {
-		// Create Motor instance
-		instance = mtr.EmptyMotor(req.DeviceId)
-
-		// Return Initialization Response
-		resp := apiv1.InitializeResponse{
-			Success: true,
-		}
-		return json.Marshal(resp)
-	}
-	return nil, errors.New("Loading existing account not implemented")
-}
+var Instance *mtr.MotorNode
 
 func CreateAccount(buf []byte) ([]byte, error) {
-	if instance == nil {
+	if Instance == nil {
 		return nil, errWalletNotExists
 	}
-	if res, err := instance.CreateAccount(buf); err == nil {
+	if res, err := Instance.CreateAccount(buf); err == nil {
 		return json.Marshal(res)
 	} else {
 		return nil, err
@@ -51,11 +26,11 @@ func CreateAccount(buf []byte) ([]byte, error) {
 }
 
 func Login(buf []byte) ([]byte, error) {
-	if instance == nil {
+	if Instance == nil {
 		return nil, errWalletNotExists
 	}
 
-	if res, err := instance.Login(buf); err == nil {
+	if res, err := Instance.Login(buf); err == nil {
 		return json.Marshal(res)
 	} else {
 		return nil, err
@@ -64,10 +39,10 @@ func Login(buf []byte) ([]byte, error) {
 
 // Address returns the address of the wallet.
 func Address() string {
-	if instance == nil {
+	if Instance == nil {
 		return ""
 	}
-	addr, err := instance.Wallet.Address()
+	addr, err := Instance.Wallet.Address()
 	if err != nil {
 		return ""
 	}
@@ -76,15 +51,15 @@ func Address() string {
 
 // Balance returns the balance of the wallet.
 func Balance() int {
-	return int(instance.Balance())
+	return int(Instance.Balance())
 }
 
 // DidDoc returns the DID document as JSON
 func DidDoc() ([]byte, error) {
-	if instance == nil {
+	if Instance == nil {
 		return nil, errWalletNotExists
 	}
-	buf, err := instance.DIDDocument.MarshalJSON()
+	buf, err := Instance.DIDDocument.MarshalJSON()
 	if err != nil {
 		return nil, err
 	}

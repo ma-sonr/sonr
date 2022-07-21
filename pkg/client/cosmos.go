@@ -4,7 +4,7 @@ import (
 	"context"
 
 	bt "github.com/sonr-io/sonr/x/bucket/types"
-	ct "github.com/sonr-io/sonr/x/channel/types"
+	// ct "github.com/sonr-io/sonr/x/channel/types"
 	rt "github.com/sonr-io/sonr/x/registry/types"
 	st "github.com/sonr-io/sonr/x/schema/types"
 	"github.com/tendermint/starport/starport/pkg/cosmosclient"
@@ -14,8 +14,8 @@ type Cosmos struct {
 	accName string
 	address string
 	cosmosclient.Client
-	bucketQuery   bt.QueryClient
-	channelQuery  ct.QueryClient
+	bucketQuery bt.QueryClient
+	// channelQuery  ct.QueryClient
 	schemaQuery   st.QueryClient
 	registryQuery rt.QueryClient
 }
@@ -327,6 +327,7 @@ func (cc *Cosmos) QueryBucket(name string) (*bt.WhichIs, error) {
 // -------
 // Channels
 // -------
+/*
 // BroadcastDeactivateChannel broadcasts a transaction to the blockchain
 func (cc *Cosmos) BroadcastCreateChannel(msg *ct.MsgCreateChannel) (*ct.MsgCreateChannelResponse, error) {
 	// broadcast the transaction to the blockchain
@@ -400,6 +401,7 @@ func (cc *Cosmos) QueryChannel(name string) (*ct.HowIs, error) {
 	howIs := queryResp.GetHowIs()
 	return &howIs, nil
 }
+*/
 
 // -------
 // Schemas
