@@ -41,9 +41,11 @@ func (fi FunctionsImpl) Store(f *Function) (string, error) {
 }
 
 func (fi FunctionsImpl) GetAndExecute(path string) error {
-	err := fi.shell.Get(path, os.TempDir()+path)
-	if err != nil {
-		return err
+	if fi.cache[path] == nil {
+		err := fi.shell.Get(path, os.TempDir()+path)
+		if err != nil {
+			return err
+		}
 	}
 
 	data, err := ioutil.ReadFile(os.TempDir() + path)
