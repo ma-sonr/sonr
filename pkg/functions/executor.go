@@ -41,23 +41,28 @@ func (fi FunctionsImpl) Store(f *Function) (string, error) {
 }
 
 func (fi FunctionsImpl) GetAndExecute(path string) error {
+	var f Function
 	if fi.cache[path] == nil {
 		err := fi.shell.Get(path, os.TempDir()+path)
 		if err != nil {
 			return err
 		}
-	}
+		defer os.Remove(os.TempDir() + path)
+		data, err := ioutil.ReadFile(os.TempDir() + path)
+		if err != nil {
+			return err
+		}
 
-	data, err := ioutil.ReadFile(os.TempDir() + path)
-	if err != nil {
-		return err
-	}
+		f = Function{}
 
-	f := Function{}
+		err = f.Unmarshal(data)
+		if err != nil {
+			return err
+		}
 
-	err = f.Unmarshal(data)
-	if err != nil {
-		return err
+		fi.cache[path] = &f
+	} else {
+		f = *fi.cache[path]
 	}
 
 	return fi.Execute(&f)
@@ -71,7 +76,7 @@ func (fi FunctionsImpl) Execute(function *Function) error {
 	if err != nil {
 		return err
 	}
-
+	defer os.Remove(os.TempDir() + "/" + ts)
 	err = ioutil.WriteFile(os.TempDir()+"/"+ts, b, 0777)
 	if err != nil {
 		return err

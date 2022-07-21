@@ -30,6 +30,7 @@ func Test_Functions(t *testing.T) {
 		b, err := f.Marshal()
 		assert.Error(t, err)
 		cid, err := shell.Add(bytes.NewBuffer(b))
+
 		assert.Error(t, err)
 		executor := functions.New(shell)
 		err = executor.GetAndExecute(cid)
