@@ -50,7 +50,7 @@ func (k Keeper) WhichIs(c context.Context, req *types.QueryWhichIsRequest) (*typ
 		req.Did,
 	)
 	if !found {
-		return nil, status.Error(codes.InvalidArgument, "not found")
+		return nil, status.Error(codes.InvalidArgument, "which is not found")
 	}
 
 	// Check if Bucket is IsActive

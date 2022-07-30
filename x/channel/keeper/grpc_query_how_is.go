@@ -50,7 +50,7 @@ func (k Keeper) HowIs(c context.Context, req *types.QueryHowIsRequest) (*types.Q
 		req.Did,
 	)
 	if !found {
-		return nil, status.Error(codes.InvalidArgument, "not found")
+		return nil, status.Error(codes.InvalidArgument, "how is not found")
 	}
 
 	// Check if Channel is IsActive

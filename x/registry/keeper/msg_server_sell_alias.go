@@ -8,7 +8,7 @@ import (
 	"github.com/sonr-io/sonr/x/registry/types"
 )
 
-func (k msgServer) SellAlias(goCtx context.Context, msg *types.MsgSellAlias) (*types.MsgSellAliasResponse, error) {
+func (k Keeper) SellAlias(goCtx context.Context, msg *types.MsgSellAlias) (*types.MsgSellAliasResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if Alias exists

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/cosmos/cosmos-sdk/types"
@@ -17,6 +18,9 @@ func (c *Client) CheckBalance(address string) (types.Coins, error) {
 		c.GetRPCAddress(),   // Or your gRPC server address.
 		grpc.WithInsecure(), // The Cosmos SDK doesn't support any transport security mechanism.
 	)
+	if err != nil {
+		return nil, err
+	}
 	defer grpcConn.Close()
 	if err != nil {
 		return nil, err
@@ -46,6 +50,10 @@ func (c *Client) RequestFaucet(address string) error {
 		return err
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("error getting faucet: %+v", resp)
+	}
 	return nil
 }
 

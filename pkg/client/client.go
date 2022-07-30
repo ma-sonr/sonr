@@ -3,7 +3,7 @@ package client
 const (
 	// -- Local Blockchain --
 	BLOCKCHAIN_REST_LOCAL   = "http://0.0.0.0:26657"
-	BLOCKCHAIN_FAUCET_LOCAL = "http://0.0.0.0:4500"
+	BLOCKCHAIN_FAUCET_LOCAL = "http://0.0.0.0:8000"
 	BLOCKCHAIN_RPC_LOCAL    = "127.0.0.1:9090"
 
 	// -- Dev Blockchain --

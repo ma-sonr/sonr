@@ -1,8 +1,8 @@
 # Build sonr
-ignite chain build -t linux:amd64 -o release --release
+sudo ignite chain build -t linux:amd64 -o release --release
 
 #  Unzip it
-tar -xzvf release/sonr_linux_amd64.tar.gz -C release
+sudo tar -xzvf release/sonr_linux_amd64.tar.gz -C release
 
 nodes=( v1-beta )
 

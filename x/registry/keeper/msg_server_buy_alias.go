@@ -9,7 +9,7 @@ import (
 )
 
 // TODO(https://github.com/sonr-io/sonr/issues/333): Make default price configurable here and elsewhere
-func (k msgServer) BuyAlias(goCtx context.Context, msg *types.MsgBuyAlias) (*types.MsgBuyAliasResponse, error) {
+func (k Keeper) BuyAlias(goCtx context.Context, msg *types.MsgBuyAlias) (*types.MsgBuyAliasResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	if err := msg.ValidateAlias(); err != nil {
 		return nil, err

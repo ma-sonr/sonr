@@ -8,7 +8,7 @@ import (
 	"github.com/sonr-io/sonr/x/registry/types"
 )
 
-func (k msgServer) TransferAlias(goCtx context.Context, msg *types.MsgTransferAlias) (*types.MsgTransferAliasResponse, error) {
+func (k Keeper) TransferAlias(goCtx context.Context, msg *types.MsgTransferAlias) (*types.MsgTransferAliasResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if Alias exists if not return error

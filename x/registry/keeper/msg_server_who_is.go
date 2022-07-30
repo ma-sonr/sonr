@@ -7,13 +7,19 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
+	// authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/sonr-io/sonr/pkg/did"
 	"github.com/sonr-io/sonr/x/registry/types"
 )
 
 // CreateWhoIs creates a whoIs from the store
-func (k msgServer) CreateWhoIs(goCtx context.Context, msg *types.MsgCreateWhoIs) (*types.MsgCreateWhoIsResponse, error) {
+func (k Keeper) CreateWhoIs(goCtx context.Context, msg *types.MsgCreateWhoIs) (*types.MsgCreateWhoIsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	// acc := authtypes.NewBaseAccountWithAddress(sdk.AccAddress([]byte(msg.Creator)))
+	// k.accountKeeper.SetAccount(ctx, k.accountKeeper.NewAccount(ctx, acc))
+
+	time.Sleep(time.Second * 10)
 
 	// UnmarshalJSON from DID document
 	doc, err := did.NewDocument(msg.GetCreatorDid())
@@ -58,7 +64,7 @@ func (k msgServer) CreateWhoIs(goCtx context.Context, msg *types.MsgCreateWhoIs)
 }
 
 // UpdateWhoIs updates a whoIs from the store
-func (k msgServer) UpdateWhoIs(goCtx context.Context, msg *types.MsgUpdateWhoIs) (*types.MsgUpdateWhoIsResponse, error) {
+func (k Keeper) UpdateWhoIs(goCtx context.Context, msg *types.MsgUpdateWhoIs) (*types.MsgUpdateWhoIsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Checks that the element exists
@@ -106,7 +112,7 @@ func (k msgServer) UpdateWhoIs(goCtx context.Context, msg *types.MsgUpdateWhoIs)
 }
 
 // DeactivateWhoIs deletes a whoIs from the store
-func (k msgServer) DeactivateWhoIs(goCtx context.Context, msg *types.MsgDeactivateWhoIs) (*types.MsgDeactivateWhoIsResponse, error) {
+func (k Keeper) DeactivateWhoIs(goCtx context.Context, msg *types.MsgDeactivateWhoIs) (*types.MsgDeactivateWhoIsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Checks that the element exists

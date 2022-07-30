@@ -18,13 +18,13 @@ func (mtr *MotorNode) CreateAccount(requestBytes []byte) (rtmv1.CreateAccountRes
 	// decode request
 	var request rtmv1.CreateAccountRequest
 	if err := json.Unmarshal(requestBytes, &request); err != nil {
-		return rtmv1.CreateAccountResponse{}, err
+		return rtmv1.CreateAccountResponse{}, fmt.Errorf("error unmarshalling request: %s", err)
 	}
 
 	// create motor
 	fmt.Printf("initializing motor... ")
 	if err := initMotor(mtr); err != nil {
-		return rtmv1.CreateAccountResponse{}, nil
+		return rtmv1.CreateAccountResponse{}, fmt.Errorf("error initializing motor: %s", err)
 	}
 	fmt.Println("done.")
 
@@ -32,7 +32,7 @@ func (mtr *MotorNode) CreateAccount(requestBytes []byte) (rtmv1.CreateAccountRes
 	fmt.Printf("requesting initial balance... ")
 	err := mtr.Cosmos.RequestFaucet(mtr.Address)
 	if err != nil {
-		return rtmv1.CreateAccountResponse{}, nil
+		return rtmv1.CreateAccountResponse{}, fmt.Errorf("error requesting facet: %s", err)
 	}
 	fmt.Println("done.")
 
@@ -40,7 +40,7 @@ func (mtr *MotorNode) CreateAccount(requestBytes []byte) (rtmv1.CreateAccountRes
 	fmt.Printf("creating shards... ")
 	deviceShard, sharedShard, recShard, unusedShards, err := mtr.Wallet.CreateInitialShards()
 	if err != nil {
-		return rtmv1.CreateAccountResponse{}, nil
+		return rtmv1.CreateAccountResponse{}, fmt.Errorf("error creating shards: %s", err)
 	}
 	mtr.deviceShard = deviceShard
 	mtr.sharedShard = sharedShard
@@ -51,7 +51,7 @@ func (mtr *MotorNode) CreateAccount(requestBytes []byte) (rtmv1.CreateAccountRes
 	// Create the DID Document
 	doc, err := did.NewDocument(mtr.DID.String())
 	if err != nil {
-		return rtmv1.CreateAccountResponse{}, nil
+		return rtmv1.CreateAccountResponse{}, fmt.Errorf("error creating did document: %s", err)
 	}
 	mtr.DIDDocument = doc
 
@@ -59,7 +59,7 @@ func (mtr *MotorNode) CreateAccount(requestBytes []byte) (rtmv1.CreateAccountRes
 	fmt.Printf("creating account... ")
 	vc := vault.New()
 	if _, err := createWhoIs(mtr); err != nil {
-		return rtmv1.CreateAccountResponse{}, nil
+		return rtmv1.CreateAccountResponse{}, fmt.Errorf("error creating account: %s", err)
 	}
 	fmt.Println("done.")
 
@@ -67,19 +67,19 @@ func (mtr *MotorNode) CreateAccount(requestBytes []byte) (rtmv1.CreateAccountRes
 	fmt.Printf("encrypting shards... ")
 	dscShard, err := dscEncrypt(mtr.deviceShard, request.AesDscKey)
 	if err != nil {
-		return rtmv1.CreateAccountResponse{}, nil
+		return rtmv1.CreateAccountResponse{}, fmt.Errorf("error encrypting shards: %s", err)
 	}
 
 	// encrypt pskShard with psk (must be generated)
 	pskShard, psk, err := pskEncrypt(mtr.sharedShard)
 	if err != nil {
-		return rtmv1.CreateAccountResponse{}, err
+		return rtmv1.CreateAccountResponse{}, fmt.Errorf("error encrypting PSK shard: %s", err)
 	}
 
 	// password protect the recovery shard
 	pwShard, err := crypto.AesEncryptWithPassword(request.Password, mtr.recoveryShard)
 	if err != nil {
-		return rtmv1.CreateAccountResponse{}, err
+		return rtmv1.CreateAccountResponse{}, fmt.Errorf("error encrypting password shard: %s", err)
 	}
 	fmt.Println("done.")
 
@@ -94,7 +94,7 @@ func (mtr *MotorNode) CreateAccount(requestBytes []byte) (rtmv1.CreateAccountRes
 		pwShard,
 	)
 	if err != nil {
-		return rtmv1.CreateAccountResponse{}, err
+		return rtmv1.CreateAccountResponse{}, fmt.Errorf("error setting up vault: %s", err)
 	}
 	fmt.Println("done.")
 
@@ -104,7 +104,7 @@ func (mtr *MotorNode) CreateAccount(requestBytes []byte) (rtmv1.CreateAccountRes
 
 	// update whois
 	if _, err = updateWhoIs(mtr); err != nil {
-		return rtmv1.CreateAccountResponse{}, err
+		return rtmv1.CreateAccountResponse{}, fmt.Errorf("error updating WhoIs: %s", err)
 	}
 	fmt.Println("done.")
 
@@ -131,6 +131,16 @@ func createWhoIs(m *MotorNode) (*sdk.TxResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	// ccli, err := client.NewCosmos(context.Background(), config.DefaultConfig(config.Role_MOTOR))
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// resp, err := ccli.BroadcastCreateWhoIs(msg1)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// fmt.Println("got resp")
+	// fmt.Println(resp)
 
 	if resp.TxResponse.RawLog != "[]" {
 		return nil, errors.New(resp.TxResponse.RawLog)

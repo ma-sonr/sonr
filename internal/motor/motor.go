@@ -40,7 +40,7 @@ func EmptyMotor(id string) *MotorNode {
 
 func initMotor(mtr *MotorNode, options ...crypto.WalletOption) (err error) {
 	// Create Client instance
-	mtr.Cosmos = client.NewClient(client.ConnEndpointType_BETA)
+	mtr.Cosmos = client.NewClient(client.ConnEndpointType_LOCAL)
 
 	// Generate wallet
 	mtr.Wallet, err = crypto.GenerateWallet(options...)

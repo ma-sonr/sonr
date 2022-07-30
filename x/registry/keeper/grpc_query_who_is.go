@@ -50,7 +50,7 @@ func (k Keeper) WhoIs(c context.Context, req *types.QueryWhoIsRequest) (*types.Q
 		req.Did,
 	)
 	if !found {
-		return nil, status.Error(codes.NotFound, "DID not found")
+		return nil, status.Error(codes.NotFound, "did not found")
 	}
 
 	return &types.QueryWhoIsResponse{WhoIs: &val}, nil
@@ -67,7 +67,7 @@ func (k Keeper) WhoIsAlias(goCtx context.Context, req *types.QueryWhoIsAliasRequ
 		req.Alias,
 	)
 	if !found {
-		return nil, status.Error(codes.NotFound, "not found")
+		return nil, status.Error(codes.NotFound, "who is alias not found")
 	}
 
 	return &types.QueryWhoIsAliasResponse{
@@ -87,7 +87,7 @@ func (k Keeper) WhoIsController(goCtx context.Context, req *types.QueryWhoIsCont
 		req.Controller,
 	)
 	if !found {
-		return nil, status.Error(codes.NotFound, "not found")
+		return nil, status.Error(codes.NotFound, "who is controller not found")
 	}
 
 	return &types.QueryWhoIsControllerResponse{
