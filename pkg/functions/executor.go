@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"strings"
 	"time"
 
 	shell "github.com/ipfs/go-ipfs-api"
@@ -40,7 +41,7 @@ func (fi FunctionsImpl) Store(f *Function) (string, error) {
 	return cid, nil
 }
 
-func (fi FunctionsImpl) GetAndExecute(path string) error {
+func (fi FunctionsImpl) GetAndExecute(path string, writer *strings.Builder) error {
 	var f Function
 	if fi.cache[path] == nil {
 		err := fi.shell.Get(path, os.TempDir()+path)
@@ -65,10 +66,10 @@ func (fi FunctionsImpl) GetAndExecute(path string) error {
 		f = *fi.cache[path]
 	}
 
-	return fi.Execute(&f)
+	return fi.Execute(&f, writer)
 }
 
-func (fi FunctionsImpl) Execute(function *Function) error {
+func (fi FunctionsImpl) Execute(function *Function, writer *strings.Builder) error {
 	ts := fmt.Sprint(time.Now().Unix())
 	b := make([]byte, function.file.Len())
 
@@ -87,6 +88,6 @@ func (fi FunctionsImpl) Execute(function *Function) error {
 		return err
 	}
 
-	fmt.Print(string(out))
+	writer.WriteString(string(out))
 	return nil
 }
