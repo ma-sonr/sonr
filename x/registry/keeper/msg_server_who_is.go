@@ -96,13 +96,19 @@ func (k msgServer) UpdateWhoIs(goCtx context.Context, msg *types.MsgUpdateWhoIs)
 		val.Metadata[k] = v
 	}
 
-	// Add remaining entries to update the whois
-	val.Controllers = doc.ControllersAsString()
+	d := val.DidDocument.DID()
+	if d == nil {
+		return nil, fmt.Errorf("error getting did from did document for creator '%s'", msg.Creator)
+	}
+
 	val.Timestamp = time.Now().Unix()
 	val.IsActive = true
 	k.SetWhoIs(ctx, val)
 
-	return &types.MsgUpdateWhoIsResponse{}, nil
+	return &types.MsgUpdateWhoIsResponse{
+		Success: true,
+		WhoIs:   &val,
+	}, nil
 }
 
 // DeactivateWhoIs deletes a whoIs from the store

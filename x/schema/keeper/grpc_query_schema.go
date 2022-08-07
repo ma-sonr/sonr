@@ -8,7 +8,7 @@ import (
 	st "github.com/sonr-io/sonr/x/schema/types"
 )
 
-func (k Keeper) QuerySchema(goCtx context.Context, req *st.QuerySchemaRequest) (*st.QuerySchemaResponse, error) {
+func (k Keeper) Schema(goCtx context.Context, req *st.QuerySchemaRequest) (*st.QuerySchemaResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	ref, found := k.GetWhatIsFromCreator(ctx, req.Creator)
 	if !found || len(ref) < 1 {
@@ -27,8 +27,16 @@ func (k Keeper) QuerySchema(goCtx context.Context, req *st.QuerySchemaRequest) (
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrNotFound, "Schema was not found for id: %s", req.Did)
 	}
 
-	var schemaJson *map[string]st.SchemaKind
-	err := k.LookUpContent(what_is.Schema.Cid, &schemaJson)
+	var schemaJson *st.SchemaDefinition = &st.SchemaDefinition{}
+	err := k.LookUpContent(what_is.Schema.Cid, schemaJson)
+
+	fields := make([]*st.SchemaKindDefinition, len(schemaJson.Fields))
+	for _, v := range schemaJson.Fields {
+		fields = append(fields, &st.SchemaKindDefinition{
+			Name:  v.Name,
+			Field: v.Field,
+		})
+	}
 
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "Error while accessing schema content")
@@ -37,35 +45,10 @@ func (k Keeper) QuerySchema(goCtx context.Context, req *st.QuerySchemaRequest) (
 	var definition *st.SchemaDefinition = &st.SchemaDefinition{
 		Creator: what_is.Creator,
 		Label:   what_is.Schema.Label,
-		Fields:  *schemaJson,
+		Fields:  fields,
 	}
 
 	return &st.QuerySchemaResponse{
-		WhatIs:     what_is,
 		Definition: definition,
-	}, nil
-}
-
-func (k Keeper) QueryWhatIs(goCtx context.Context, req *st.QueryWhatIsRequest) (*st.QueryWhatIsResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-	ref, found := k.GetWhatIsFromCreator(ctx, req.Creator)
-	if !found || len(ref) < 1 {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, "Schema was not found")
-	}
-
-	var what_is *st.WhatIs
-	for _, item := range ref {
-		if item.Did == req.Did {
-			what_is = &item
-			break
-		}
-	}
-
-	if what_is == nil {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrNotFound, "Schema was not found for id: %s", req.Did)
-	}
-
-	return &st.QueryWhatIsResponse{
-		WhatIs: what_is,
 	}, nil
 }

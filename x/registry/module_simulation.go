@@ -86,7 +86,6 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
-
 	var weightMsgCreateWhoIs int
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateWhoIs, &weightMsgCreateWhoIs, nil,
 		func(_ *rand.Rand) {
@@ -153,7 +152,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		weightMsgDeactivateWhoIs,
 		registrysimulation.SimulateMsgDeactivateWhoIs(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
-
 	// this line is used by starport scaffolding # simapp/module/operation
 
 	return operations

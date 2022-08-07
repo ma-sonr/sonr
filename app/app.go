@@ -103,9 +103,6 @@ import (
 	bucketmodule "github.com/sonr-io/sonr/x/bucket"
 	bucketmodulekeeper "github.com/sonr-io/sonr/x/bucket/keeper"
 	bucketmoduletypes "github.com/sonr-io/sonr/x/bucket/types"
-	channelmodule "github.com/sonr-io/sonr/x/channel"
-	channelmodulekeeper "github.com/sonr-io/sonr/x/channel/keeper"
-	channelmoduletypes "github.com/sonr-io/sonr/x/channel/types"
 	registrymodule "github.com/sonr-io/sonr/x/registry"
 	registrymodulekeeper "github.com/sonr-io/sonr/x/registry/keeper"
 	registrymoduletypes "github.com/sonr-io/sonr/x/registry/types"
@@ -164,12 +161,13 @@ var (
 		upgrade.AppModuleBasic{},
 		evidence.AppModuleBasic{},
 		transfer.AppModuleBasic{},
+		// groupmodule.AppModuleBasic{},
 		vesting.AppModuleBasic{},
+		// nftmodule.AppModuleBasic{},
 		monitoringp.AppModuleBasic{},
-		channelmodule.AppModuleBasic{},
 		schemamodule.AppModuleBasic{},
-		bucketmodule.AppModuleBasic{},
 		registrymodule.AppModuleBasic{},
+		bucketmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -181,11 +179,11 @@ var (
 		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
+		// nft.ModuleName:                 nil,
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-		channelmoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		schemamoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner, authtypes.Staking},
-		bucketmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		registrymoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		bucketmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -241,20 +239,18 @@ type App struct {
 	TransferKeeper   ibctransferkeeper.Keeper
 	FeeGrantKeeper   feegrantkeeper.Keeper
 	MonitoringKeeper monitoringpkeeper.Keeper
+	// GroupKeeper      groupkeeper.Keeper
+	// NFTKeeper        nftkeeper.Keeper
 
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper        capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper   capabilitykeeper.ScopedKeeper
 	ScopedMonitoringKeeper capabilitykeeper.ScopedKeeper
 
-	ChannelKeeper channelmodulekeeper.Keeper
-
-	SchemaKeeper schemamodulekeeper.Keeper
-
-	BucketKeeper bucketmodulekeeper.Keeper
-
+	// sonr module keepers
 	RegistryKeeper registrymodulekeeper.Keeper
-
+	SchemaKeeper   schemamodulekeeper.Keeper
+	BucketKeeper   bucketmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -290,11 +286,11 @@ func New(
 		authtypes.StoreKey, authz.ModuleName, banktypes.StoreKey, stakingtypes.StoreKey,
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
+		// nft.ModuleName, group.ModuleName,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey, monitoringptypes.StoreKey,
-		// this line is used by starport scaffolding # stargate/app/storeKey
-		channelmoduletypes.StoreKey,
-		schemamoduletypes.StoreKey,
 		bucketmoduletypes.StoreKey,
+		// this line is used by starport scaffolding # stargate/app/storeKey
+		schemamoduletypes.StoreKey,
 		registrymoduletypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -416,19 +412,6 @@ func New(
 	)
 	monitoringModule := monitoringp.NewAppModule(appCodec, app.MonitoringKeeper)
 
-	app.ChannelKeeper = *channelmodulekeeper.NewKeeper(
-		appCodec,
-		keys[channelmoduletypes.StoreKey],
-		keys[channelmoduletypes.MemStoreKey],
-		app.GetSubspace(channelmoduletypes.ModuleName),
-
-		app.AccountKeeper,
-		app.BankKeeper,
-		app.CapabilityKeeper,
-		app.MintKeeper,
-	)
-	channelModule := channelmodule.NewAppModule(appCodec, app.ChannelKeeper, app.AccountKeeper, app.BankKeeper)
-
 	app.SchemaKeeper = *schemamodulekeeper.NewKeeper(
 		appCodec,
 		keys[schemamoduletypes.StoreKey],
@@ -441,19 +424,6 @@ func New(
 	)
 	schemaModule := schemamodule.NewAppModule(appCodec, app.SchemaKeeper, app.AccountKeeper, app.BankKeeper)
 
-	app.BucketKeeper = *bucketmodulekeeper.NewKeeper(
-		appCodec,
-		keys[bucketmoduletypes.StoreKey],
-		keys[bucketmoduletypes.MemStoreKey],
-		app.GetSubspace(bucketmoduletypes.ModuleName),
-
-		app.AccountKeeper,
-		app.BankKeeper,
-		app.CapabilityKeeper,
-		app.MintKeeper,
-	)
-	bucketModule := bucketmodule.NewAppModule(appCodec, app.BucketKeeper, app.AccountKeeper, app.BankKeeper)
-
 	app.RegistryKeeper = *registrymodulekeeper.NewKeeper(
 		appCodec,
 		keys[registrymoduletypes.StoreKey],
@@ -463,6 +433,16 @@ func New(
 		app.AccountKeeper,
 	)
 	registryModule := registrymodule.NewAppModule(appCodec, app.RegistryKeeper, app.AccountKeeper, app.BankKeeper)
+
+	app.BucketKeeper = *bucketmodulekeeper.NewKeeper(
+		appCodec,
+		keys[bucketmoduletypes.StoreKey],
+		keys[bucketmoduletypes.MemStoreKey],
+		app.GetSubspace(bucketmoduletypes.ModuleName),
+
+		app.BankKeeper,
+	)
+	bucketModule := bucketmodule.NewAppModule(appCodec, app.BucketKeeper, app.AccountKeeper, app.BankKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
@@ -505,10 +485,9 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		monitoringModule,
-		// this line is used by starport scaffolding # stargate/app/appModule
-		channelModule,
-		schemaModule,
 		bucketModule,
+		// this line is used by starport scaffolding # stargate/app/appModule
+		schemaModule,
 		registryModule,
 	)
 
@@ -536,10 +515,9 @@ func New(
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
 		monitoringptypes.ModuleName,
-		// this line is used by starport scaffolding # stargate/app/beginBlockers
-		channelmoduletypes.ModuleName,
-		schemamoduletypes.ModuleName,
 		bucketmoduletypes.ModuleName,
+		// this line is used by starport scaffolding # stargate/app/beginBlockers
+		schemamoduletypes.ModuleName,
 		registrymoduletypes.ModuleName,
 	)
 
@@ -563,10 +541,9 @@ func New(
 		ibchost.ModuleName,
 		ibctransfertypes.ModuleName,
 		monitoringptypes.ModuleName,
-		// this line is used by starport scaffolding # stargate/app/endBlockers
-		channelmoduletypes.ModuleName,
-		schemamoduletypes.ModuleName,
 		bucketmoduletypes.ModuleName,
+		// this line is used by starport scaffolding # stargate/app/endBlockers
+		schemamoduletypes.ModuleName,
 		registrymoduletypes.ModuleName,
 	)
 
@@ -595,10 +572,9 @@ func New(
 		ibctransfertypes.ModuleName,
 		feegrant.ModuleName,
 		monitoringptypes.ModuleName,
-		// this line is used by starport scaffolding # stargate/app/initGenesis
-		channelmoduletypes.ModuleName,
-		schemamoduletypes.ModuleName,
 		bucketmoduletypes.ModuleName,
+		// this line is used by starport scaffolding # stargate/app/initGenesis
+		schemamoduletypes.ModuleName,
 		registrymoduletypes.ModuleName,
 	)
 
@@ -623,10 +599,9 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		transferModule,
 		monitoringModule,
-		channelModule,
 		schemaModule,
-		bucketModule,
 		registryModule,
+		bucketModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -816,10 +791,9 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(monitoringptypes.ModuleName)
-	// this line is used by starport scaffolding # stargate/app/paramSubspace
-	paramsKeeper.Subspace(channelmoduletypes.ModuleName)
-	paramsKeeper.Subspace(schemamoduletypes.ModuleName)
 	paramsKeeper.Subspace(bucketmoduletypes.ModuleName)
+	// this line is used by starport scaffolding # stargate/app/paramSubspace
+	paramsKeeper.Subspace(schemamoduletypes.ModuleName)
 	paramsKeeper.Subspace(registrymoduletypes.ModuleName)
 	return paramsKeeper
 }
