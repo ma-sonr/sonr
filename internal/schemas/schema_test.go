@@ -1,19 +1,20 @@
 package schemas_test
 
 import (
-	"bytes"
+	"context"
 	"testing"
 	"time"
 
-	shell "github.com/ipfs/go-ipfs-api"
 	"github.com/sonr-io/sonr/internal/schemas"
+	"github.com/sonr-io/sonr/pkg/protocol"
+	"github.com/sonr-io/sonr/pkg/store"
+	shell "github.com/sonr-io/sonr/testutil/ipfs"
 
 	st "github.com/sonr-io/sonr/x/schema/types"
 	"github.com/stretchr/testify/assert"
 )
 
-func CreateMockHeirachyThreeLevel(creator string, did string) (st.WhatIs, st.SchemaDefinition) {
-
+func CreateMockHeirachyThreeLevel(shell protocol.IPFS, creator string, did string) (st.WhatIs, st.SchemaDefinition) {
 	mockWhatIs := st.WhatIs{
 		Did: did,
 		Schema: &st.SchemaReference{
@@ -58,7 +59,7 @@ func CreateMockHeirachyThreeLevel(creator string, did string) (st.WhatIs, st.Sch
 		panic("Unable to serialize test data")
 	}
 
-	cid, err := shell.NewLocalShell().Add(bytes.NewReader(buf))
+	cid, err := shell.PutData(context.Background(), buf)
 
 	if err != nil {
 		panic("error while persisting mock data")
@@ -97,7 +98,7 @@ func CreateMockHeirachyThreeLevel(creator string, did string) (st.WhatIs, st.Sch
 		panic("Unable to serialize test data")
 	}
 
-	commentCid, err := shell.NewLocalShell().Add(bytes.NewReader(commentBuf))
+	commentCid, err := shell.PutData(context.Background(), commentBuf)
 
 	if err != nil {
 		panic("error while attempting to persist mocks")
@@ -350,11 +351,10 @@ func Test_IPLD_Nodes(t *testing.T) {
 }
 
 func Test_Sub_Schemas(t *testing.T) {
-	t.Skip("Skipping for CI")
-	whatIs, def := CreateMockHeirachyThreeLevel("snr12345", "did:snr:1234")
-
+	shell := shell.NewMockShell(store.NewMemoryStore().Datastore())
+	whatIs, def := CreateMockHeirachyThreeLevel(shell, "snr12345", "did:snr:1234")
 	t.Run("multi level sub schema should load into internal module", func(t *testing.T) {
-		schema := schemas.New(def.Fields, &whatIs)
+		schema := schemas.NewWithShell(shell, def.Fields, &whatIs)
 
 		obj := map[string]interface{}{
 			"id":   1,
@@ -388,7 +388,7 @@ func Test_Sub_Schemas(t *testing.T) {
 	})
 
 	t.Run("multi level sub schema should error with invalid types", func(t *testing.T) {
-		schema := schemas.New(def.Fields, &whatIs)
+		schema := schemas.NewWithShell(shell, def.Fields, &whatIs)
 
 		obj := map[string]interface{}{
 			"id":   1,
