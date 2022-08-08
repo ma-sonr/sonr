@@ -28,7 +28,17 @@ func (k Keeper) Schema(goCtx context.Context, req *st.QuerySchemaRequest) (*st.Q
 	}
 
 	var schemaJson *st.SchemaDefinition = &st.SchemaDefinition{}
-	err := k.LookUpContent(what_is.Schema.Cid, schemaJson)
+	buf, err := k.ipfsStore.GetData(goCtx, what_is.Schema.Cid)
+
+	if err != nil {
+		return nil, sdkerrors.Wrap(err, "Error while querying schema definition")
+	}
+
+	err = schemaJson.Unmarshal(buf)
+
+	if err != nil {
+		return nil, sdkerrors.Wrap(err, "Error while converting schema definition")
+	}
 
 	fields := make([]*st.SchemaKindDefinition, len(schemaJson.Fields))
 	for _, v := range schemaJson.Fields {
