@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"testing"
 
-	shell "github.com/ipfs/go-ipfs-api"
 	"github.com/sonr-io/sonr/internal/object"
 	"github.com/sonr-io/sonr/internal/schemas"
+	"github.com/sonr-io/sonr/pkg/protocol"
+	"github.com/sonr-io/sonr/pkg/store"
 	st "github.com/sonr-io/sonr/x/schema/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -57,12 +58,10 @@ func CreateMockSchemaDefinition() (st.SchemaDefinition, map[string]interface{}) 
 	return def, obj
 }
 func Test_Object(t *testing.T) {
-	t.Skip("Skipping test in CI")
-
 	config := object.Config{}
 	def, jsonData := CreateMockSchemaDefinition()
 	schema := schemas.New(def.Fields, nil)
-	config.WithStorage(shell.NewShell("localhost:5001"))
+	config.WithStorage(protocol.NewIPFSShell("localhost:5001", store.NewMemoryStore().Batching()))
 	config.WithSchemaImpl(schema)
 
 	obj := object.NewWithConfig(&config)

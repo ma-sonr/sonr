@@ -1,6 +1,7 @@
 package object
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -26,7 +27,7 @@ func (ao *objectImpl) CreateObject(
 		return nil, err
 	}
 
-	cid, err := ao.shell.DagPut(enc, "dag-json", "dag-cbor")
+	cid, err := ao.store.DagPut(context.Background(), enc, "dag-json", "dag-cbor")
 	did := fmt.Sprintf("did:snr:%s", uuid.New().String())
 	if err != nil {
 		return nil, err
@@ -45,7 +46,7 @@ func (ao *objectImpl) CreateObject(
 
 func (ao *objectImpl) GetObject(cid string) (map[string]interface{}, error) {
 	var dag map[string]interface{}
-	err := ao.shell.DagGet(cid, &dag)
+	err := ao.store.DagGet(context.Background(), cid, &dag)
 	if err != nil {
 		return nil, err
 	}

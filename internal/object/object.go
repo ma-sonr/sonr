@@ -3,8 +3,8 @@ package object
 import (
 	"errors"
 
-	shell "github.com/ipfs/go-ipfs-api"
 	"github.com/sonr-io/sonr/internal/schemas"
+	"github.com/sonr-io/sonr/pkg/protocol"
 )
 
 var (
@@ -28,21 +28,21 @@ type ObjectUploadResult struct {
 }
 
 type objectImpl struct {
-	shell  *shell.Shell
+	store  protocol.IPFS
 	schema schemas.Schema
 }
 
-func New(schemaImpl schemas.Schema, shell *shell.Shell) *objectImpl {
+func New(schemaImpl schemas.Schema, store protocol.IPFS) *objectImpl {
 	return &objectImpl{
 		// TODO: replace with store interface that Daniel made
-		shell:  shell,
+		store:  store,
 		schema: schemaImpl,
 	}
 }
 
 func NewWithConfig(c *Config) *objectImpl {
 	return &objectImpl{
-		shell:  c.storeImpl,
+		store:  c.storeImpl,
 		schema: c.schema,
 	}
 }

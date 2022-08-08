@@ -5,8 +5,9 @@ import (
 	"errors"
 
 	"github.com/ipfs/go-cid"
-	shell "github.com/ipfs/go-ipfs-api"
 	"github.com/ipld/go-ipld-prime/datamodel"
+	"github.com/sonr-io/sonr/pkg/protocol"
+	"github.com/sonr-io/sonr/pkg/store"
 	st "github.com/sonr-io/sonr/x/schema/types"
 )
 
@@ -33,7 +34,7 @@ type schemaImpl struct {
 	subSchemas map[string]*st.SchemaDefinition
 	whatIs     *st.WhatIs
 	nodes      datamodel.Node
-	store      *readStoreImpl
+	store      protocol.IPFS
 	next       *schemaImpl
 }
 
@@ -46,9 +47,7 @@ func New(fields []*st.SchemaKindDefinition, whatIs *st.WhatIs) Schema {
 		subSchemas: make(map[string]*st.SchemaDefinition),
 		whatIs:     whatIs,
 		nodes:      nil,
-		store: &readStoreImpl{
-			shell: shell.NewLocalShell(),
-		},
+		store:      protocol.NewIPFSShell("localhost:5001", store.NewMemoryStore().Batching()),
 	}
 
 	asi.loadSubSchemas(context.Background(), fields)
@@ -58,15 +57,13 @@ func New(fields []*st.SchemaKindDefinition, whatIs *st.WhatIs) Schema {
 /*
 	Initialize with a ipfs shell instance
 */
-func NewWithShell(shell *shell.Shell, fields []*st.SchemaKindDefinition, whatIs *st.WhatIs) Schema {
+func NewWithShell(store protocol.IPFS, fields []*st.SchemaKindDefinition, whatIs *st.WhatIs) Schema {
 	asi := &schemaImpl{
 		fields:     fields,
 		subSchemas: make(map[string]*st.SchemaDefinition),
 		whatIs:     whatIs,
 		nodes:      nil,
-		store: &readStoreImpl{
-			shell: shell,
-		},
+		store:      store,
 	}
 
 	asi.loadSubSchemas(context.Background(), fields)

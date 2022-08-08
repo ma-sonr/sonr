@@ -25,7 +25,7 @@ func (as *schemaImpl) loadSubSchemas(ctx context.Context, fields []*st.SchemaKin
 	for len(links) > 0 {
 		key := links[len(links)-1]
 		links = links[:len(links)-1]
-		buf, err := as.store.Get(ctx, key)
+		buf, err := as.store.GetData(ctx, key)
 
 		if err != nil {
 			return err
