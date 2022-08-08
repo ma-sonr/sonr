@@ -32,7 +32,7 @@ func (i *IPFSShell) DagGet(ctx context.Context, ref string, out interface{}) err
 	key := datastore.NewKey(ref)
 	cached, err := i.cache.Get(ctx, key)
 
-	if err != nil {
+	if err != nil && err != datastore.ErrNotFound {
 		return err
 	}
 
@@ -44,7 +44,7 @@ func (i *IPFSShell) DagGet(ctx context.Context, ref string, out interface{}) err
 }
 
 func (i *IPFSShell) DagPut(ctx context.Context, data interface{}, inputCodec, storeCodec string) (string, error) {
-	panic("TODO")
+	return i.shell.DagPut(data, inputCodec, storeCodec)
 }
 
 func (i *IPFSShell) GetData(ctx context.Context, cid string) ([]byte, error) {
