@@ -100,6 +100,8 @@ import (
 	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
 
 	docs "github.com/sonr-io/sonr/docs"
+	"github.com/sonr-io/sonr/pkg/protocol"
+	"github.com/sonr-io/sonr/pkg/store"
 	bucketmodule "github.com/sonr-io/sonr/x/bucket"
 	bucketmodulekeeper "github.com/sonr-io/sonr/x/bucket/keeper"
 	bucketmoduletypes "github.com/sonr-io/sonr/x/bucket/types"
@@ -113,6 +115,7 @@ import (
 )
 
 const (
+	IpfsReadAddr         = "https://api.ipfs.sonr.ws"
 	AccountAddressPrefix = "snr"
 	Name                 = "sonr"
 )
@@ -137,6 +140,7 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 }
 
 var (
+	ipfs protocol.IPFS
 	// DefaultNodeHome default home directories for the application daemon
 	DefaultNodeHome string
 
@@ -202,6 +206,8 @@ func init() {
 	}
 
 	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
+
+	ipfs = protocol.NewIPFSShell(IpfsReadAddr, store.NewMemoryStore().Datastore())
 }
 
 // App extends an ABCI application, but with most of its parameters exported.
@@ -417,7 +423,7 @@ func New(
 		keys[schemamoduletypes.StoreKey],
 		keys[schemamoduletypes.MemStoreKey],
 		app.GetSubspace(schemamoduletypes.ModuleName),
-
+		ipfs,
 		app.AccountKeeper,
 		app.CapabilityKeeper,
 		app.BankKeeper,

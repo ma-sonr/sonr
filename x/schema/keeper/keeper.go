@@ -8,16 +8,17 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"github.com/sonr-io/sonr/pkg/protocol"
 	"github.com/sonr-io/sonr/x/schema/types"
 )
 
 type (
 	Keeper struct {
-		cdc        codec.BinaryCodec
-		storeKey   sdk.StoreKey
-		memKey     sdk.StoreKey
-		paramstore paramtypes.Subspace
-
+		cdc              codec.BinaryCodec
+		storeKey         sdk.StoreKey
+		memKey           sdk.StoreKey
+		paramstore       paramtypes.Subspace
+		ipfsStore        protocol.IPFS
 		capabilityKeeper types.CapabilityKeeper
 		bankKeeper       types.BankKeeper
 	}
@@ -28,7 +29,7 @@ func NewKeeper(
 	storeKey,
 	memKey sdk.StoreKey,
 	ps paramtypes.Subspace,
-
+	ipfs protocol.IPFS,
 	accountKeeper types.AccountKeeper, capabilityKeeper types.CapabilityKeeper, bankKeeper types.BankKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
@@ -42,6 +43,7 @@ func NewKeeper(
 		storeKey:         storeKey,
 		memKey:           memKey,
 		paramstore:       ps,
+		ipfsStore:        ipfs,
 		capabilityKeeper: capabilityKeeper,
 		bankKeeper:       bankKeeper,
 	}
