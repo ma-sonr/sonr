@@ -35,7 +35,10 @@ func (i *IpfsShellMock) GetData(ctx context.Context, cid string) ([]byte, error)
 }
 
 func (i *IpfsShellMock) PutData(ctx context.Context, data []byte) (string, error) {
-	cidStr := string(sha256.New().Sum(nil))
+	hash := sha256.New()
+	hash.Write(data)
+
+	cidStr := string(hash.Sum(nil))
 
 	err := i.cache.Put(ctx, datastore.NewKey(cidStr), data)
 	if err != nil {
