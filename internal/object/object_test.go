@@ -6,8 +6,8 @@ import (
 
 	"github.com/sonr-io/sonr/internal/object"
 	"github.com/sonr-io/sonr/internal/schemas"
-	"github.com/sonr-io/sonr/pkg/protocol"
 	"github.com/sonr-io/sonr/pkg/store"
+	shell "github.com/sonr-io/sonr/testutil/ipfs"
 	st "github.com/sonr-io/sonr/x/schema/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -60,8 +60,10 @@ func CreateMockSchemaDefinition() (st.SchemaDefinition, map[string]interface{}) 
 func Test_Object(t *testing.T) {
 	config := object.Config{}
 	def, jsonData := CreateMockSchemaDefinition()
+
 	schema := schemas.New(def.Fields, nil)
-	config.WithStorage(protocol.NewIPFSShell("localhost:5001", store.NewMemoryStore().Batching()))
+	store := shell.NewMockShell(store.NewMemoryStore().Datastore())
+	config.WithStorage(store)
 	config.WithSchemaImpl(schema)
 
 	obj := object.NewWithConfig(&config)
