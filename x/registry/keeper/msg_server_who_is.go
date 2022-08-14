@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/armon/go-metrics"
+	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sonr-io/sonr/pkg/did"
@@ -52,6 +54,9 @@ func (k msgServer) CreateWhoIs(goCtx context.Context, msg *types.MsgCreateWhoIs)
 
 	// Add the also known as to the whois
 	k.SetWhoIs(ctx, whoIs)
+
+	telemetry.IncrCounterWithLabels([]string{k.memKey.String()}, 1, []metrics.Label{telemetry.NewLabel(k.memKey.Name(), "registry")})
+
 	return &types.MsgCreateWhoIsResponse{
 		WhoIs: &whoIs,
 	}, nil

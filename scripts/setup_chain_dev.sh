@@ -31,6 +31,7 @@ echo "BOB_ACCOUNT:"; echo $(sonrd keys show -a bob --keyring-backend test)
 toml-cli set /root/.sonr/config/app.toml api.enable true
 toml-cli set /root/.sonr/config/app.toml api.swagger true
 toml-cli set /root/.sonr/config/app.toml grpc-web true
+toml-cli set /root/.sonr/config/app.toml telemetry.enabled = true
 
 toml-cli set /root/.sonr/config/client.toml chain-id sonr
 

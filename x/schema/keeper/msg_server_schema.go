@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/armon/go-metrics"
+	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sonr-io/sonr/pkg/did"
@@ -71,7 +73,7 @@ func (k msgServer) CreateSchema(goCtx context.Context, msg *types.MsgCreateSchem
 	}
 
 	k.SetWhatIs(ctx, whatIs)
-
+	telemetry.IncrCounterWithLabels([]string{k.memKey.String()}, 1, []metrics.Label{telemetry.NewLabel(k.memKey.Name(), "schemas")})
 	resp := types.MsgCreateSchemaResponse{
 		Code:    200,
 		Message: "Schema Registered Sucessfully",

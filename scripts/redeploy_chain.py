@@ -9,10 +9,7 @@ from os.path import exists
 
 PORT = 26656
 NODE_ENDPOINTS = [
-    'v1.sonr.ws',
-    'v2.sonr.ws',
-    'v3.sonr.ws',
-    'v4.sonr.ws'
+'45.33.85.221'
 ]
 
 TEMP_DIR="./temp"
