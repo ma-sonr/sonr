@@ -38,7 +38,7 @@ type MotorNode interface {
 
 	CreateSchema(mt.CreateSchemaRequest) (mt.CreateSchemaResponse, error)
 	QueryWhatIs(context.Context, mt.QueryWhatIsRequest) (mt.QueryWhatIsResponse, error)
-
+	QueryWhatIsByCreator(context.Context, mt.QueryWhatIsRequest) (mt.QueryWhatIsByCreatorResponse, error)
 	NewObjectBuilder(schemaDid string) (*object.ObjectBuilder, error)
 }
 

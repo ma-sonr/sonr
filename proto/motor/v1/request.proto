@@ -32,16 +32,16 @@ message InitializeRequest {
 
   // Libp2p Host Options
   message HostOptions {
-    bool quic_transport = 1;             // Enable QUIC Transport
-    bool http_transport = 2;             // Enable HTTP Transport
-    bool ipv4_only = 3;                  // Enable IPv4 Only
+    bool quic_transport = 1; // Enable QUIC Transport
+    bool http_transport = 2; // Enable HTTP Transport
+    bool ipv4_only = 3; // Enable IPv4 Only
     repeated IPAddress listen_addrs = 4; // List of Listen Addresses (optional)
   }
 
   // IP Address Interface
   message IPAddress {
-    string name = 1;   // Name of Interface
-    string address = 2;  // IP Address of Interface
+    string name = 1; // Name of Interface
+    string address = 2; // IP Address of Interface
     bool internal = 3; // Wether it is a Loopback Interface
     Family family = 4; // Address Family
 
@@ -82,8 +82,11 @@ message QueryWhatIsRequest {
   string did = 2;
 }
 
+message QueryWhatIsByCreatorRequest {
+  string creator = 1;
+}
+
 message QuerySchemaRequest {
   string creator = 1;
   string did = 2;
 }
-
