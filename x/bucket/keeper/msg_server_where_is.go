@@ -26,13 +26,12 @@ func (k msgServer) CreateWhereIs(goCtx context.Context, msg *types.MsgCreateWher
 		return nil, sdkerrors.ErrNotFound
 	}
 
-	creator_did := msg.GetCreatorDid()
 	uuid := k.GenerateKeyForDID()
 
 	did := fmt.Sprintf("did:snr:%s", uuid)
 
 	var whereIs = types.WhereIs{
-		Creator:    creator_did,
+		Creator:    msg.Creator,
 		Did:        did,
 		Visibility: msg.Visibility,
 		Role:       msg.Role,
