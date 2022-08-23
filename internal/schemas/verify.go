@@ -88,10 +88,12 @@ func CheckValueOfField(value interface{}, fieldType st.SchemaKind) bool {
 		return fieldType == st.SchemaKind_LIST
 	case []string:
 		return fieldType == st.SchemaKind_LIST
+	case []map[string]string:
+		return fieldType == st.SchemaKind_LIST
 	case map[string]interface{}:
 		return fieldType == st.SchemaKind_LINK
-	case interface{}:
-		return fieldType == st.SchemaKind_ANY
+	case map[string]string:
+		return fieldType == st.SchemaKind_MAP
 	default:
 		return false
 	}

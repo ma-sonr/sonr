@@ -75,6 +75,20 @@ func (as *schemaImpl) AssignValueToNode(field st.SchemaKind, ma datamodel.MapAss
 	case st.SchemaKind_BYTES:
 		val := value.([]byte)
 		ma.AssembleValue().AssignBytes(val)
+	case st.SchemaKind_MAP:
+		val := value.(map[string]string)
+		np := basicnode.Prototype.Any
+		nb := np.NewBuilder() // Create a builder.
+		massem, _ := nb.BeginMap(int64(len(val)))
+
+		for k, v := range val {
+			massem.AssembleKey().AssignString(k)
+			massem.AssembleValue().AssignString(v)
+		}
+		massem.Finish()
+		n := nb.Build()
+		ma.AssembleValue().AssignNode(n)
+
 	case st.SchemaKind_LIST:
 		val := make([]interface{}, 0)
 		s := reflect.ValueOf(value)

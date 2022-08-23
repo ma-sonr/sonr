@@ -31815,7 +31815,7 @@ paths:
                             - STRING
                             - BYTES
                             - LINK
-                            - ANY
+                            - MAP
                           default: LIST
                         link_kind:
                           title: >-
@@ -56444,7 +56444,7 @@ definitions:
                     - STRING
                     - BYTES
                     - LINK
-                    - ANY
+                    - MAP
                   default: LIST
                 link_kind:
                   title: >-
@@ -56571,7 +56571,7 @@ definitions:
                 - STRING
                 - BYTES
                 - LINK
-                - ANY
+                - MAP
               default: LIST
             link_kind:
               title: >-
@@ -56597,7 +56597,7 @@ definitions:
       - STRING
       - BYTES
       - LINK
-      - ANY
+      - MAP
     default: LIST
   sonrio.sonr.schema.SchemaKindDefinition:
     type: object
@@ -56615,7 +56615,7 @@ definitions:
           - STRING
           - BYTES
           - LINK
-          - ANY
+          - MAP
         default: LIST
       link_kind:
         title: Optional field for a link context if `SchemaKind` is of type `Link`

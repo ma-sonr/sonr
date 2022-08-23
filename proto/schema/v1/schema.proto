@@ -19,7 +19,7 @@ enum SchemaKind {
   STRING = 4;
   BYTES = 5;
   LINK = 6;
-  ANY = 7;
+  MAP = 7;
 }
 
 message MetadataDefintion {
