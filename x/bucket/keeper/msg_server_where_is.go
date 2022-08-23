@@ -38,7 +38,6 @@ func (k msgServer) CreateWhereIs(goCtx context.Context, msg *types.MsgCreateWher
 		Role:       msg.Role,
 		IsActive:   true,
 		Content:    msg.Content,
-		ContentAcl: msg.ContentAcl,
 		Timestamp:  time.Now().Unix(),
 	}
 
