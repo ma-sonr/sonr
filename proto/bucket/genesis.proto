@@ -13,5 +13,6 @@ option go_package = "github.com/sonr-io/sonr/x/bucket/types";
 message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
   repeated WhereIs where_is_list = 2 [(gogoproto.nullable) = false];
+  uint64 where_is_count = 3;
   // this line is used by starport scaffolding # genesis/proto/state
 }

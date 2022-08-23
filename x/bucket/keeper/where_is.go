@@ -61,19 +61,20 @@ func (k Keeper) SetWhereIs(ctx sdk.Context, whereIs types.WhereIs) {
 // GetWhereIs returns a whereIs from its id
 func (k Keeper) GetWhereIs(ctx sdk.Context, creator, id string) (val types.WhereIs, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.WhereIsKeyPrefix))
-	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
-	defer iterator.Close()
+	b := store.Get(
+		types.WhereIsKey(
+			id,
+		),
+	)
 
-	for ; iterator.Valid(); iterator.Next() {
-		var val types.WhereIs
-		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		if val.Did == id && val.Creator == creator {
-			return val, true
-		}
+	if b == nil {
+		return val, false
 	}
 
-	return types.WhereIs{}, false
+	k.cdc.MustUnmarshal(b, &val)
+
+	return val, true
 }
 
 // GetWhereIs returns a whereIs from its id
@@ -86,30 +87,12 @@ func (k Keeper) GetWhereIsByCreator(ctx sdk.Context, creator string) (list []typ
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.WhereIs
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		if val.Creator == creator {
+		if val.Creator == creator && val.IsActive {
 			list = append(list, val)
 		}
 	}
 
 	return
-}
-
-// GetWhereIs returns a whereIs from its id
-func (k Keeper) GetWhereIsAll(ctx sdk.Context, creator, id string) (val types.WhereIs, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.WhereIsKeyPrefix))
-	iterator := sdk.KVStorePrefixIterator(store, []byte{})
-
-	defer iterator.Close()
-
-	for ; iterator.Valid(); iterator.Next() {
-		var val types.WhereIs
-		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		if val.Did == id && val.Creator == creator {
-			return val, true
-		}
-	}
-
-	return types.WhereIs{}, false
 }
 
 // RemoveWhereIs removes a whereIs from the store
