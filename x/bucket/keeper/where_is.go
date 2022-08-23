@@ -61,7 +61,6 @@ func (k Keeper) SetWhereIs(ctx sdk.Context, whereIs types.WhereIs) {
 // GetWhereIs returns a whereIs from its id
 func (k Keeper) GetWhereIs(ctx sdk.Context, creator, id string) (val types.WhereIs, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.WhereIsKeyPrefix))
-
 	b := store.Get(
 		types.WhereIsKey(
 			id,
@@ -73,8 +72,11 @@ func (k Keeper) GetWhereIs(ctx sdk.Context, creator, id string) (val types.Where
 	}
 
 	k.cdc.MustUnmarshal(b, &val)
+	if val.Visibility == types.BucketVisibility_PUBLIC || val.Creator == creator {
+		return val, true
+	}
 
-	return val, true
+	return val, false
 }
 
 // GetWhereIs returns a whereIs from its id
