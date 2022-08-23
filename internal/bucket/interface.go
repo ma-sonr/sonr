@@ -12,6 +12,7 @@ import (
 	Version: 0.1.0
 */
 type Bucket interface {
+	GetDid() string
 	/*
 		Retrieves a piece of content by the given uri
 	*/
@@ -25,6 +26,12 @@ type Bucket interface {
 	GetBuckets() []*BucketContent
 
 	GetContent() []*BucketContent
+
+	GetLabel() string
+
+	GetRole() bt.BucketRole
+
+	GetVisibility() bt.BucketVisibility
 
 	/*
 		Checks if a given uri for existence in the given bucket

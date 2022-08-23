@@ -47,3 +47,19 @@ func (b *bucketImpl) GetBuckets() []*BucketContent {
 
 	return content
 }
+
+func (b *bucketImpl) GetLabel() string {
+	return b.whereIs.Label
+}
+
+func (b *bucketImpl) GetDid() string {
+	return b.whereIs.Did
+}
+
+func (b *bucketImpl) GetRole() bt.BucketRole {
+	return b.whereIs.Role
+}
+
+func (b *bucketImpl) GetVisibility() bt.BucketVisibility {
+	return b.whereIs.Visibility
+}
