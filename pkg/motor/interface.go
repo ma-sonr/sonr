@@ -4,12 +4,12 @@ import (
 	"context"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/sonr-io/sonr/internal/bucket"
 	"github.com/sonr-io/sonr/pkg/client"
 	"github.com/sonr-io/sonr/pkg/crypto/mpc"
 	"github.com/sonr-io/sonr/pkg/did"
 	"github.com/sonr-io/sonr/pkg/host"
 	mt "github.com/sonr-io/sonr/pkg/motor/types"
+	"github.com/sonr-io/sonr/pkg/motor/x/bucket"
 	"github.com/sonr-io/sonr/pkg/motor/x/object"
 	bt "github.com/sonr-io/sonr/x/bucket/types"
 )

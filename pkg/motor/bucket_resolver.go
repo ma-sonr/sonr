@@ -4,9 +4,10 @@ import (
 	"context"
 
 	"github.com/sonr-io/sonr/internal/bucket"
+	pubBucket "github.com/sonr-io/sonr/pkg/motor/x/bucket"
 )
 
-func (mtr *motorNodeImpl) GetBucket(context context.Context, did string) (bucket.Bucket, error) {
+func (mtr *motorNodeImpl) GetBucket(context context.Context, did string) (pubBucket.Bucket, error) {
 	addr := mtr.GetAddress()
 	if _, ok := mtr.Resources.whereIsStore[did]; !ok {
 		_, err := mtr.QueryWhereIs(context, did)
@@ -39,10 +40,10 @@ func (mtr *motorNodeImpl) GetBucket(context context.Context, did string) (bucket
 	Takes the whereIs store and checks for a matching bucket in the cache, if its not present it will create it and get its sub buckets
 	Does not query for new buckets, only respects what is currently present in the store
 */
-func (mtr *motorNodeImpl) GetBuckets(context context.Context) ([]bucket.Bucket, error) {
+func (mtr *motorNodeImpl) GetBuckets(context context.Context) ([]pubBucket.Bucket, error) {
 	addr := mtr.GetAddress()
 
-	var buckets []bucket.Bucket = make([]bucket.Bucket, len(mtr.Resources.whereIsStore))
+	var buckets []pubBucket.Bucket = make([]pubBucket.Bucket, len(mtr.Resources.whereIsStore))
 	for _, wi := range mtr.Resources.whereIsStore {
 		did := wi.Did
 		if _, ok := mtr.Resources.bucketStore[did]; !ok {

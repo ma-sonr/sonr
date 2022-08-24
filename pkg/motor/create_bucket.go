@@ -6,14 +6,15 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/sonr-io/sonr/internal/bucket"
+	privBucket "github.com/sonr-io/sonr/internal/bucket"
 	"github.com/sonr-io/sonr/pkg/client"
 	mt "github.com/sonr-io/sonr/pkg/motor/types"
+	pubBucket "github.com/sonr-io/sonr/pkg/motor/x/bucket"
 	"github.com/sonr-io/sonr/pkg/tx"
 	bt "github.com/sonr-io/sonr/x/bucket/types"
 )
 
-func (mtr *motorNodeImpl) CreateBucket(ctx context.Context, request mt.CreateBucketRequest) (bucket.Bucket, error) {
+func (mtr *motorNodeImpl) CreateBucket(ctx context.Context, request mt.CreateBucketRequest) (pubBucket.Bucket, error) {
 
 	if request.Creator == "" {
 		return nil, errors.New("invalid Address")
@@ -50,7 +51,7 @@ func (mtr *motorNodeImpl) CreateBucket(ctx context.Context, request mt.CreateBuc
 		return nil, err
 	}
 
-	b := bucket.New(addr,
+	b := privBucket.New(addr,
 		mtr.Resources.whereIsStore[cbresp.WhereIs.Did],
 		mtr.Resources.shell,
 		mtr.Resources.bucketQueryClient)

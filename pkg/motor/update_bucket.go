@@ -9,11 +9,12 @@ import (
 	"github.com/sonr-io/sonr/internal/bucket"
 	"github.com/sonr-io/sonr/pkg/client"
 	mt "github.com/sonr-io/sonr/pkg/motor/types"
+	pubBucket "github.com/sonr-io/sonr/pkg/motor/x/bucket"
 	"github.com/sonr-io/sonr/pkg/tx"
 	bt "github.com/sonr-io/sonr/x/bucket/types"
 )
 
-func (mtr *motorNodeImpl) UpdateBucket(req mt.UpdateBucketRequest) (bucket.Bucket, error) {
+func (mtr *motorNodeImpl) UpdateBucket(req mt.UpdateBucketRequest) (pubBucket.Bucket, error) {
 	if mtr.Address == "" {
 		return nil, errors.New("invalid Address")
 	}
@@ -68,7 +69,7 @@ func (mtr *motorNodeImpl) UpdateBucket(req mt.UpdateBucketRequest) (bucket.Bucke
 	return b, nil
 }
 
-func (mtr *motorNodeImpl) UpdateBucketItems(context context.Context, did string, items []*bt.BucketItem) (bucket.Bucket, error) {
+func (mtr *motorNodeImpl) UpdateBucketItems(context context.Context, did string, items []*bt.BucketItem) (pubBucket.Bucket, error) {
 	if _, ok := mtr.Resources.bucketStore[did]; !ok {
 		return nil, errors.New("cannot resolve content for bucket, not found")
 	}
@@ -91,7 +92,7 @@ func (mtr *motorNodeImpl) UpdateBucketItems(context context.Context, did string,
 	return b, nil
 }
 
-func (mtr *motorNodeImpl) UpdateBucketLabel(context context.Context, did string, label string) (bucket.Bucket, error) {
+func (mtr *motorNodeImpl) UpdateBucketLabel(context context.Context, did string, label string) (pubBucket.Bucket, error) {
 	if _, ok := mtr.Resources.bucketStore[did]; !ok {
 		return nil, errors.New("cannot resolve content for bucket, not found")
 	}
@@ -115,7 +116,7 @@ func (mtr *motorNodeImpl) UpdateBucketLabel(context context.Context, did string,
 	return b, nil
 }
 
-func (mtr *motorNodeImpl) UpdateBucketVisibility(context context.Context, did string, visibility bt.BucketVisibility) (bucket.Bucket, error) {
+func (mtr *motorNodeImpl) UpdateBucketVisibility(context context.Context, did string, visibility bt.BucketVisibility) (pubBucket.Bucket, error) {
 	if _, ok := mtr.Resources.bucketStore[did]; !ok {
 		return nil, errors.New("cannot resolve content for bucket, not found")
 	}
