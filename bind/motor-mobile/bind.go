@@ -24,6 +24,7 @@ var (
 
 type MotorCallback interface {
 	OnDiscover(data []byte)
+	OnLog(msg string)
 	OnWalletCreated(ok bool)
 }
 

@@ -45,7 +45,6 @@ func BlankDocument() Document {
 
 // NewDocument generates a new DID Document for the provided ID string
 func NewDocument(idStr string) (Document, error) {
-	fmt.Println(idStr)
 	id, err := ParseDID(idStr)
 	if err != nil {
 		return nil, err

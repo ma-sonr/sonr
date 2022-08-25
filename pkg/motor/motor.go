@@ -70,7 +70,6 @@ func initMotor(mtr *motorNodeImpl, options ...mpc.WalletOption) (err error) {
 	// Create Client instance
 	mtr.Cosmos = client.NewClient(client.ConnEndpointType_BETA)
 	// Generate wallet
-	log.Println("Generating wallet...")
 	mtr.Wallet, err = mpc.GenerateWallet(mtr.callback, options...)
 	if err != nil {
 		return err
@@ -96,9 +95,6 @@ func initMotor(mtr *motorNodeImpl, options ...mpc.WalletOption) (err error) {
 		return err
 	}
 	mtr.DID = *baseDid
-	log.Println("Wallet set to:", mtr.Address)
-	mtr.GetClient().PrintConnectionEndpoints()
-	log.Println("✅ Motor Wallet initialized")
 	return nil
 }
 
@@ -115,7 +111,6 @@ func (mtr *motorNodeImpl) Connect() error {
 	var err error
 	// Create new host
 	if mtr.isHostEnabled {
-		log.Println("Creating host...")
 		mtr.SonrHost, err = host.NewDefaultHost(context.Background(), config.DefaultConfig(config.Role_MOTOR, mtr.Address))
 		if err != nil {
 			return err

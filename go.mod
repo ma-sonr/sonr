@@ -3,12 +3,14 @@ module github.com/sonr-io/sonr
 go 1.16
 
 require (
+	github.com/briandowns/spinner v1.19.0
 	github.com/charmbracelet/bubbletea v0.22.1 // indirect
 	github.com/charmbracelet/charm v0.12.4
 	github.com/cosmos/cosmos-sdk v0.45.5
 	github.com/cosmos/ibc-go/v3 v3.0.0
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/erikgeiser/promptkit v0.7.0
+	github.com/fatih/color v1.13.0
 	github.com/fxamacker/cbor/v2 v2.4.0
 	github.com/gabriel-vasile/mimetype v1.4.0
 	github.com/gin-gonic/gin v1.7.7

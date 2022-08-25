@@ -44,12 +44,15 @@ func loginCmd() *cobra.Command {
 				AesPskKey: ua.AesPSKKey,
 				AesDscKey: ua.AesDSCKey,
 			}
-			m := setupMotor()
+			cb := state.GetCallback()
+			cb.StartSpinner()
+			m := setupMotor(cb)
 			_, err = m.Login(req)
 			if err != nil {
 				logger.Errorf("Failed to login with UserAuth %e", err)
 				return
 			}
+			cb.StopSpinner("User Authorized")
 			state.DisplayMotorTable(m, "Logged In")
 			if err := state.Set([]byte("currentAccount"), []byte(addr)); err != nil {
 				logger.Errorf("Failed to set currentAccount %e", err)
@@ -81,19 +84,23 @@ func registerCmd() *cobra.Command {
 				logger.Errorf("Error creating new AES Key %e", err)
 				return
 			}
-			m := setupMotor()
+			cb := state.GetCallback()
+			cb.StartSpinner()
+			m := setupMotor(cb)
 			res, err := m.CreateAccount(*req)
 			if err != nil {
 				logger.Errorf("CreateAccount Error: %e", err)
 				return
 			}
+
+			cb.StopSpinner("Account Registered")
 			if yes := state.PromptConfirm("Would you like to store AuthInfo in the system keychain"); yes {
 				if err := ua.StoreAuth(res.Address, res.GetAesPsk()); err != nil {
 					logger.Errorf("Failed to save UserAuth to Keychain %e", err)
 					return
 				}
 			}
-			state.DisplayMotorTable(m, "Account Registered")
+			// state.DisplayMotorTable(m, "Account Registered")
 		},
 	}
 	return cmd
@@ -119,11 +126,11 @@ func listCmd() *cobra.Command {
 	return cmd
 }
 
-func setupMotor() motor.MotorNode {
+func setupMotor(cb common.MotorCallback) motor.MotorNode {
 	initreq := &mt.InitializeRequest{
 		DeviceId: state.DesktopID(),
 	}
-	m, err := motor.EmptyMotor(initreq, common.DefaultCallback())
+	m, err := motor.EmptyMotor(initreq, cb)
 	if err != nil {
 		logger.Fatalf("Error initializing motor node, %e", err)
 	}

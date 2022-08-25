@@ -21,32 +21,33 @@ func (mtr *motorNodeImpl) Login(request mt.LoginRequest) (mt.LoginResponse, erro
 	mtr.Address = request.Did
 
 	// fetch vault shards
-	fmt.Printf("fetching shards from vault... ")
+	mtr.callback.OnLog("Retreiving Account IPFS Vault")
 	shards, err := vault.New().GetVaultShards(request.Did)
 	if err != nil {
 		return mt.LoginResponse{}, fmt.Errorf("error getting vault shards: %s", err)
 	}
-	fmt.Println("done.")
 
-	fmt.Printf("reconstructing wallet... ")
+	mtr.callback.OnLog("Assembling Shards")
 	cnfgs, err := createWalletConfigs(mtr.DeviceID, request, shards)
 	if err != nil {
 		return mt.LoginResponse{}, fmt.Errorf("error creating preferred config: %s", err)
 	}
 
 	// generate wallet
+	mtr.callback.OnLog("Constructing MPC Wallet")
 	if err = initMotor(mtr, mpc.WithConfigs(cnfgs)); err != nil {
 		return mt.LoginResponse{}, fmt.Errorf("error generating wallet: %s", err)
 	}
-	fmt.Println("done.")
 
 	// fetch DID document from chain
+	mtr.callback.OnLog("Querying for DID Document")
 	whoIs, err := mtr.Cosmos.QueryWhoIs(request.Did)
 	if err != nil {
 		return mt.LoginResponse{}, fmt.Errorf("error fetching whois: %s", err)
 	}
 
 	// TODO: this is a hacky workaround for the Id not being populated in the DID document
+	mtr.callback.OnLog("Authorizing User")
 	whoIs.DidDocument.Id = did.CreateDIDFromAccount(whoIs.Owner)
 	mtr.DIDDocument, err = whoIs.DidDocument.ToPkgDoc()
 	if err != nil {

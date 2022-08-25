@@ -16,22 +16,20 @@ import (
 
 func (mtr *motorNodeImpl) CreateAccount(request mt.CreateAccountRequest) (mt.CreateAccountResponse, error) {
 	// create motor
-	fmt.Printf("initializing motor... ")
+	mtr.callback.OnLog("Initializing MPC Wallet")
 	if err := initMotor(mtr); err != nil {
 		return mt.CreateAccountResponse{}, fmt.Errorf("initialize motor: %s", err)
 	}
-	fmt.Println("done.")
 
 	// Request from Faucet
-	fmt.Printf("requesting initial balance... ")
+	mtr.callback.OnLog("Requesting Faucet Airdrop")
 	err := mtr.Cosmos.RequestFaucet(mtr.Address)
 	if err != nil {
 		return mt.CreateAccountResponse{}, fmt.Errorf("request from faucet: %s", err)
 	}
-	fmt.Println("done.")
 
 	// Create Initial Shards
-	fmt.Printf("creating shards... ")
+	mtr.callback.OnLog("Creating Shards")
 	deviceShard, sharedShard, recShard, unusedShards, err := mtr.Wallet.CreateInitialShards()
 	if err != nil {
 		return mt.CreateAccountResponse{}, fmt.Errorf("create shards: %s", err)
@@ -40,7 +38,6 @@ func (mtr *motorNodeImpl) CreateAccount(request mt.CreateAccountRequest) (mt.Cre
 	mtr.sharedShard = sharedShard
 	mtr.recoveryShard = recShard
 	mtr.unusedShards = unusedShards
-	fmt.Println("done.")
 
 	// Create the DID Document
 	doc, err := did.NewDocument(mtr.DID.String())
@@ -50,15 +47,14 @@ func (mtr *motorNodeImpl) CreateAccount(request mt.CreateAccountRequest) (mt.Cre
 	mtr.DIDDocument = doc
 
 	// create Vault shards to make sure this works before creating WhoIs
-	fmt.Printf("creating account... ")
+	mtr.callback.OnLog("Building DID Document")
 	vc := vault.New()
 	if _, err := createWhoIs(mtr); err != nil {
 		return mt.CreateAccountResponse{}, fmt.Errorf("create account: %s", err)
 	}
-	fmt.Println("done.")
 
 	// ecnrypt dscShard with DSC
-	fmt.Printf("encrypting shards... ")
+	mtr.callback.OnLog("Encrypting Shards")
 	dscShard, err := dscEncrypt(mtr.deviceShard, request.AesDscKey)
 	if err != nil {
 		return mt.CreateAccountResponse{}, fmt.Errorf("encrypt backup shards: %s", err)
@@ -75,10 +71,9 @@ func (mtr *motorNodeImpl) CreateAccount(request mt.CreateAccountRequest) (mt.Cre
 	if err != nil {
 		return mt.CreateAccountResponse{}, fmt.Errorf("encrypt password shard: %s", err)
 	}
-	fmt.Println("done.")
 
 	// create vault
-	fmt.Printf("setting up vault... ")
+	mtr.callback.OnLog("Setting up IPFS Vault")
 	vaultService, err := vc.CreateVault(
 		mtr.Address,
 		mtr.unusedShards,
@@ -90,18 +85,15 @@ func (mtr *motorNodeImpl) CreateAccount(request mt.CreateAccountRequest) (mt.Cre
 	if err != nil {
 		return mt.CreateAccountResponse{}, fmt.Errorf("setup vault: %s", err)
 	}
-	fmt.Println("done.")
 
 	// update DID Document
-	fmt.Printf("updating WhoIs... ")
+	mtr.callback.OnLog("Broadcasting new account TX")
 	mtr.DIDDocument.AddService(vaultService)
 
 	// update whois
 	if _, err = updateWhoIs(mtr); err != nil {
 		return mt.CreateAccountResponse{}, fmt.Errorf("update WhoIs: %s", err)
 	}
-	fmt.Println("done.")
-	fmt.Println("account created successfully.")
 
 	docBytes, err := mtr.DIDDocument.MarshalJSON()
 	if err != nil {
