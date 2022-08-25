@@ -11,8 +11,41 @@ import (
 func RootMotorCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "motor",
-		Short: "Setup a local Motor instance",
+		Short: "Tools for managing Motor instances",
 	}
+	cmd.AddCommand(accCmd())
+	return cmd
+}
+
+func accCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "account",
+		Aliases: []string{"a"},
+		Short:   "Management for Motor accounts and the registry module",
+		Example: `
+		# Create a new account
+		sonrd motor account register
+
+		# Login to a stored account
+		sonrd motor account login
+		`,
+		Run: func(cmd *cobra.Command, args []string) {
+			// Check for reset flag
+			if reset := cmd.Flag("reset").Value.String(); reset == "true" {
+				if ok := state.PromptConfirm("Reset all Keychain account data?"); !ok {
+					return
+				}
+				if err := state.ResetKeychain(); err != nil {
+					state.LogErr(err.Error())
+				}
+				state.LogSuccess("Keychain data reset")
+			} else {
+				cmd.Help()
+			}
+
+		},
+	}
+	cmd.Flags().BoolP("reset", "r", false, "Reset Account Data")
 	cmd.AddCommand(loginCmd(), registerCmd(), listCmd())
 	return cmd
 }

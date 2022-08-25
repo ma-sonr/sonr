@@ -3,6 +3,7 @@ package state
 import (
 	"bytes"
 	"encoding/gob"
+	"sort"
 	"time"
 
 	"github.com/pkg/errors"
@@ -17,6 +18,22 @@ const K_AUTH_LIST_KEY = "auth_list"
 
 type UserAuthList struct {
 	Auths map[string]UserAuth
+}
+
+func (l UserAuthList) Sorted() ([]string, []UserAuth) {
+	var addrs []string
+	var ls []UserAuth
+	for addr, ua := range l.Auths {
+		ls = append(ls, ua)
+		addrs = append(addrs, addr)
+	}
+	// Reverse the order of the rows to match time created
+	sort.Slice(ls, func(i, j int) bool {
+		tI, _ := time.Parse(time.RFC3339, ls[i].CreatedAt)
+		tJ, _ := time.Parse(time.RFC3339, ls[j].CreatedAt)
+		return tI.After(tJ)
+	})
+	return addrs, ls
 }
 
 func (l UserAuthList) Add(addr string, ua UserAuth) {
@@ -58,6 +75,11 @@ type UserAuth struct {
 	AesDSCKey []byte
 	AesPSKKey []byte
 	CreatedAt string
+}
+
+func (i UserAuth) CreatedAtStr() string {
+	t, _ := time.Parse(time.RFC3339, i.CreatedAt)
+	return t.Format("02/01/2006 15:04")
 }
 
 func (i UserAuth) Validate() bool {
@@ -171,4 +193,24 @@ func newAuthList() UserAuthList {
 	return UserAuthList{
 		Auths: make(map[string]UserAuth),
 	}
+}
+
+func ResetKeychain() error {
+	al := newAuthList()
+	bz, err := al.Serialize()
+	if err != nil {
+		return errors.Wrap(err, "Failed to serialize UserAuthList")
+	}
+	kc, err := fetchKCService()
+	if err != nil {
+		return errors.Wrap(err, "Failed to initialize keychain service")
+	}
+	err = kc.Set(keyring.Item{
+		Key:  K_AUTH_LIST_KEY,
+		Data: bz,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }

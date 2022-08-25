@@ -42,10 +42,6 @@ func DisplayAccListTable(ul UserAuthList) {
 		s = append(s, table.Row{idx, addr, createdAtStr})
 		idx++
 	}
-	// Reverse the order of the rows to match time created
-	for i := len(s)/2 - 1; i >= 0; i-- {
-		s[i], s[len(s)-1-i] = s[len(s)-1-i], s[i]
-	}
 	t.AppendRows(s)
 	t.SetStyle(table.StyleLight)
 	t.Render()
