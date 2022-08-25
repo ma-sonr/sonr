@@ -3,7 +3,6 @@ package state
 import (
 	"bytes"
 	"encoding/gob"
-	"sort"
 	"time"
 
 	"github.com/pkg/errors"
@@ -18,22 +17,6 @@ const K_AUTH_LIST_KEY = "auth_list"
 
 type UserAuthList struct {
 	Auths map[string]UserAuth
-}
-
-func (l UserAuthList) Sorted() ([]string, []UserAuth) {
-	var addrs []string
-	var ls []UserAuth
-	for addr, ua := range l.Auths {
-		ls = append(ls, ua)
-		addrs = append(addrs, addr)
-	}
-	// Reverse the order of the rows to match time created
-	sort.Slice(ls, func(i, j int) bool {
-		tI, _ := time.Parse(time.RFC3339, ls[i].CreatedAt)
-		tJ, _ := time.Parse(time.RFC3339, ls[j].CreatedAt)
-		return tI.After(tJ)
-	})
-	return addrs, ls
 }
 
 func (l UserAuthList) Add(addr string, ua UserAuth) {
