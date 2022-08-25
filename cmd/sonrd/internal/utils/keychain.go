@@ -84,10 +84,6 @@ func (i UserAuth) GenAccountCreateRequest() (*mt.CreateAccountRequest, error) {
 }
 
 func NewUserAuth(pwd string) (UserAuth, error) {
-	if len(pwd) < 8 {
-		return UserAuth{}, errors.New("Password must be atleast 8 characters")
-	}
-
 	aesKey, err := mpc.NewAesKey()
 	if err != nil {
 		return UserAuth{}, err

@@ -1,8 +1,12 @@
 package commands
 
 import (
+	"log"
+
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/kataras/golog"
-	"github.com/sonr-io/sonr/cmd/sonrd/utils"
+	"github.com/sonr-io/sonr/cmd/sonrd/internal/tui"
+	"github.com/sonr-io/sonr/cmd/sonrd/internal/utils"
 	"github.com/sonr-io/sonr/pkg/motor"
 	"github.com/sonr-io/sonr/third_party/types/common"
 	mt "github.com/sonr-io/sonr/third_party/types/motor"
@@ -17,6 +21,15 @@ func RootMotorCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "motor",
 		Short: "Setup a local Motor instance",
+		Run: func(cmd *cobra.Command, args []string) {
+			// Create a new TUI model which will be rendered in Bubbletea.
+			state := tui.NewModel()
+			// tea.NewProgram starts the Bubbletea framework which will render our
+			// application using our state.
+			if err := tea.NewProgram(state).Start(); err != nil {
+				log.Fatal(err)
+			}
+		},
 	}
 	cmd.AddCommand(loginCmd(), registerCmd(), listCmd())
 	return cmd
@@ -27,6 +40,7 @@ func loginCmd() *cobra.Command {
 		Use:   "login",
 		Short: "Login to an existing sonr account on disk",
 		Run: func(cmd *cobra.Command, args []string) {
+
 			if ok := utils.PromptConfirm("Continue Login with System Keychain"); !ok {
 				logger.Infof("Aborting login.")
 				return

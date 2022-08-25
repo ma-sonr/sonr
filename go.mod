@@ -3,7 +3,8 @@ module github.com/sonr-io/sonr
 go 1.16
 
 require (
-	github.com/charmbracelet/bubbletea v0.22.1 // indirect
+	github.com/charmbracelet/bubbles v0.13.0
+	github.com/charmbracelet/bubbletea v0.22.1
 	github.com/charmbracelet/charm v0.12.4
 	github.com/cosmos/cosmos-sdk v0.45.5
 	github.com/cosmos/ibc-go/v3 v3.0.0
