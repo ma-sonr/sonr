@@ -31,7 +31,7 @@ func DisplayAccListTable(ul UserAuthList) {
 	t.SetOutputMirror(os.Stdout)
 	t.SetTitle("Available Accounts")
 	t.AppendHeader(table.Row{"#", "Address", "Created"})
-	var rows []table.Row
+	var s []table.Row
 	idx := 1
 	for addr, ua := range ul.Auths {
 		// Parse time RFC3339
@@ -39,10 +39,14 @@ func DisplayAccListTable(ul UserAuthList) {
 
 		// Convert created at to D/M/Y HH:MM format
 		createdAtStr := createdAt.Format("02/01/2006 15:04")
-		rows = append(rows, table.Row{idx, addr, createdAtStr})
+		s = append(s, table.Row{idx, addr, createdAtStr})
 		idx++
 	}
-	t.AppendRows(rows)
+	// Reverse the order of the rows to match time created
+	for i := len(s)/2 - 1; i >= 0; i-- {
+		s[i], s[len(s)-1-i] = s[len(s)-1-i], s[i]
+	}
+	t.AppendRows(s)
 	t.SetStyle(table.StyleLight)
 	t.Render()
 }

@@ -19,7 +19,7 @@ func GetCallback() *Logger {
 	s := spinner.New(spinner.CharSets[4], 100*time.Millisecond)
 	return &Logger{
 		spinner: s,
-		logIdx:  1,
+		logIdx:  0,
 	}
 }
 
@@ -46,7 +46,7 @@ func (cb *Logger) StartSpinner() {
 
 func (cb *Logger) StopSpinner(msg string) {
 	cb.spinner.Stop()
-	cb.logIdx = 1
+	cb.logIdx = 0
 	LogSuccess(msg)
 }
 
