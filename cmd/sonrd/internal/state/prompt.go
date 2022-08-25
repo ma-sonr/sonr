@@ -1,4 +1,4 @@
-package utils
+package state
 
 import (
 	"errors"
@@ -62,7 +62,7 @@ func PromptAccSelect(ul UserAuthList, label string) (string, UserAuth, error) {
 	}
 	sp := selection.New(label, items)
 	sp.PageSize = 3
-
+	sp.KeyMap.Select = append(sp.KeyMap.Select, "Continue")
 	choice, err := sp.RunPrompt()
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
@@ -81,7 +81,11 @@ func PromptAccSelect(ul UserAuthList, label string) (string, UserAuth, error) {
 }
 
 func PromptConfirm(msg string) bool {
-	input := confirmation.New(msg, confirmation.Undecided)
+	input := confirmation.New(msg, confirmation.Yes)
+	input.Template = confirmation.TemplateYN
+	input.ResultTemplate = confirmation.ResultTemplateYN
+	input.KeyMap.SelectYes = append(input.KeyMap.SelectYes, "✅")
+	input.KeyMap.SelectNo = append(input.KeyMap.SelectNo, "❌")
 	ready, err := input.RunPrompt()
 	if err != nil {
 		golog.Default.Error(err)

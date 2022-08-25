@@ -1,4 +1,4 @@
-package utils
+package state
 
 import (
 	"bytes"
@@ -61,7 +61,7 @@ type UserAuth struct {
 }
 
 func (i UserAuth) Validate() bool {
-	if len(i.Password) < 12 {
+	if len(i.Password) < 8 {
 		return false
 	}
 	if i.AesDSCKey == nil {

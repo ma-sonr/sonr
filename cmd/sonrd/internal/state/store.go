@@ -1,4 +1,4 @@
-package utils
+package state
 
 import (
 	"github.com/charmbracelet/charm/kv"

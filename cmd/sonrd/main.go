@@ -8,7 +8,6 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
 	"github.com/kataras/golog"
 	"github.com/sonr-io/sonr/app"
-	"github.com/sonr-io/sonr/cmd/sonrd/commands"
 	"github.com/spf13/viper"
 )
 
@@ -41,7 +40,7 @@ func main() {
 		app.New,
 		// this line is used by starport scaffolding # root/arguments
 	)
-	rootCmd.AddCommand(commands.RootMotorCommand())
+	rootCmd.AddCommand(RootMotorCommand())
 	// Execute the root command.
 	if err := svrcmd.Execute(rootCmd, app.DefaultNodeHome); err != nil {
 		fmt.Println(err)

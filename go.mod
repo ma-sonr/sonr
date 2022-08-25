@@ -3,13 +3,12 @@ module github.com/sonr-io/sonr
 go 1.16
 
 require (
-	github.com/charmbracelet/bubbletea v0.22.1
+	github.com/charmbracelet/bubbletea v0.22.1 // indirect
 	github.com/charmbracelet/charm v0.12.4
 	github.com/cosmos/cosmos-sdk v0.45.5
 	github.com/cosmos/ibc-go/v3 v3.0.0
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/erikgeiser/promptkit v0.7.0
-	github.com/fogleman/ease v0.0.0-20170301025033-8da417bf1776
 	github.com/fxamacker/cbor/v2 v2.4.0
 	github.com/gabriel-vasile/mimetype v1.4.0
 	github.com/gin-gonic/gin v1.7.7
@@ -40,11 +39,8 @@ require (
 	github.com/libp2p/go-libp2p-kad-dht v0.16.0
 	github.com/libp2p/go-libp2p-pubsub v0.7.0
 	github.com/libp2p/go-msgio v0.2.0
-	github.com/lucasb-eyer/go-colorful v1.2.0
 	github.com/marstr/guid v1.1.0
 	github.com/mr-tron/base58 v1.2.0
-	github.com/muesli/reflow v0.3.0
-	github.com/muesli/termenv v0.12.0
 	github.com/multiformats/go-multiaddr v0.5.0
 	github.com/ockam-network/did v0.1.3
 	github.com/patrickmn/go-cache v2.1.0+incompatible
