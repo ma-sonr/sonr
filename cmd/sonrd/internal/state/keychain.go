@@ -95,13 +95,13 @@ func NewUserAuth(pwd string) (UserAuth, error) {
 	}, nil
 }
 
-func (i UserAuth) StoreAuth(addr string, psk []byte) error {
+func (i UserAuth) StoreAuth(addr string, psk []byte) (UserAuthList, error) {
 	kc, err := fetchKCService()
 	if err != nil {
-		return errors.Wrap(err, "Failed to initialize keychain service")
+		return UserAuthList{}, errors.Wrap(err, "Failed to initialize keychain service")
 	}
 	if !i.Validate() {
-		return errors.New("Invalid UserAuth Object")
+		return UserAuthList{}, errors.New("Invalid UserAuth Object")
 	}
 	i.AesPSKKey = psk
 
@@ -114,16 +114,16 @@ func (i UserAuth) StoreAuth(addr string, psk []byte) error {
 
 	bz, err := al.Serialize()
 	if err != nil {
-		return errors.Wrap(err, "Failed to serialize UserAuthList")
+		return UserAuthList{}, errors.Wrap(err, "Failed to serialize UserAuthList")
 	}
 	err = kc.Set(keyring.Item{
 		Key:  K_AUTH_LIST_KEY,
 		Data: bz,
 	})
 	if err != nil {
-		return err
+		return UserAuthList{}, err
 	}
-	return nil
+	return al, nil
 }
 
 func HasUserAuth() bool {

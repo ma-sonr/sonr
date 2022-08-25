@@ -14,7 +14,7 @@ import (
 	"github.com/sonr-io/sonr/pkg/motor"
 )
 
-func DisplayMotorTable(m motor.MotorNode, msg string) {
+func DisplayMotorTable(m motor.MotorNode) {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.SetTitle("Account Information")
@@ -24,7 +24,6 @@ func DisplayMotorTable(m motor.MotorNode, msg string) {
 	})
 	t.SetStyle(table.StyleLight)
 	t.Render()
-	golog.Default.Printf("✅ SUCCESS: %s", msg)
 }
 
 func DisplayAccListTable(ul UserAuthList) {
@@ -61,12 +60,11 @@ func PromptAccSelect(ul UserAuthList, label string) (string, UserAuth, error) {
 		index++
 	}
 	sp := selection.New(label, items)
-	sp.PageSize = 3
+	sp.PageSize = 5
 	sp.KeyMap.Select = append(sp.KeyMap.Select, "Continue")
 	choice, err := sp.RunPrompt()
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
-
 		os.Exit(1)
 	}
 

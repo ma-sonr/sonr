@@ -16,7 +16,7 @@ type Logger struct {
 }
 
 func GetCallback() *Logger {
-	s := spinner.New(spinner.CharSets[11], 100*time.Millisecond)
+	s := spinner.New(spinner.CharSets[4], 100*time.Millisecond)
 	return &Logger{
 		spinner: s,
 		logIdx:  1,
@@ -40,6 +40,7 @@ func LogInfo(msg string) {
 }
 
 func (cb *Logger) StartSpinner() {
+	fmt.Println()
 	cb.spinner.Start()
 }
 
@@ -59,5 +60,5 @@ func (cb *Logger) OnWalletCreated(ok bool) {
 
 func (cb *Logger) OnLog(msg string) {
 	cb.logIdx++
-	cb.spinner.Suffix = fmt.Sprintf("%d. %s", cb.logIdx, msg)
+	cb.spinner.Suffix = fmt.Sprintf(" %d. %s", cb.logIdx, msg)
 }

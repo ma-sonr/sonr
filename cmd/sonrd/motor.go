@@ -53,7 +53,7 @@ func loginCmd() *cobra.Command {
 				return
 			}
 			cb.StopSpinner("User Authorized")
-			state.DisplayMotorTable(m, "Logged In")
+			state.DisplayMotorTable(m)
 			if err := state.Set([]byte("currentAccount"), []byte(addr)); err != nil {
 				logger.Errorf("Failed to set currentAccount %e", err)
 				return
@@ -94,13 +94,14 @@ func registerCmd() *cobra.Command {
 			}
 
 			cb.StopSpinner("Account Registered")
-			if yes := state.PromptConfirm("Would you like to store AuthInfo in the system keychain"); yes {
-				if err := ua.StoreAuth(res.Address, res.GetAesPsk()); err != nil {
+			if yes := state.PromptConfirm("Sonr requires system keychain access to store your Account Info. Continue?"); yes {
+				ual, err := ua.StoreAuth(res.Address, res.GetAesPsk())
+				if err != nil {
 					logger.Errorf("Failed to save UserAuth to Keychain %e", err)
 					return
 				}
+				state.DisplayAccListTable(ual)
 			}
-			// state.DisplayMotorTable(m, "Account Registered")
 		},
 	}
 	return cmd
@@ -111,7 +112,7 @@ func listCmd() *cobra.Command {
 		Use:   "list",
 		Short: "Lists all accounts on User Keychain",
 		Run: func(cmd *cobra.Command, args []string) {
-			if ok := state.PromptConfirm("Logging in requires authorization over system Keychain."); !ok {
+			if ok := state.PromptConfirm("Logging in requires authorization over system Keychain. Continue?"); !ok {
 				logger.Infof("Aborting list.")
 				return
 			}
