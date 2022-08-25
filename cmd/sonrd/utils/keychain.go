@@ -3,6 +3,7 @@ package utils
 import (
 	"bytes"
 	"encoding/gob"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/sonr-io/keyring"
@@ -56,6 +57,7 @@ type UserAuth struct {
 	Password  string
 	AesDSCKey []byte
 	AesPSKKey []byte
+	CreatedAt string
 }
 
 func (i UserAuth) Validate() bool {
@@ -93,6 +95,7 @@ func NewUserAuth(pwd string) (UserAuth, error) {
 	return UserAuth{
 		Password:  pwd,
 		AesDSCKey: aesKey,
+		CreatedAt: time.Now().Format(time.RFC3339),
 	}, nil
 }
 
@@ -106,8 +109,13 @@ func (i UserAuth) StoreAuth(addr string, psk []byte) error {
 	}
 	i.AesPSKKey = psk
 
-	al := newAuthList()
+	var al UserAuthList
+	al, err = GetUserAuthList()
+	if err != nil {
+		al = newAuthList()
+	}
 	al.Add(addr, i)
+
 	bz, err := al.Serialize()
 	if err != nil {
 		return errors.Wrap(err, "Failed to serialize UserAuthList")
@@ -122,23 +130,12 @@ func (i UserAuth) StoreAuth(addr string, psk []byte) error {
 	return nil
 }
 
-func GetUserAuth(addr string) (UserAuth, error) {
-	kc, err := fetchKCService()
+func HasUserAuth() bool {
+	ual, err := GetUserAuthList()
 	if err != nil {
-		return UserAuth{}, errors.Wrap(err, "Failed to initialize keychain service")
+		return false
 	}
-	i, err := kc.Get(K_AUTH_LIST_KEY)
-	if err != nil {
-		return UserAuth{}, err
-	}
-	if i.Data == nil || len(i.Data) == 0 {
-		return UserAuth{}, errors.New("Keychain Item data is invalid (empty or nil)")
-	}
-	al, err := DeserializeUserAuthList(i.Data)
-	if err != nil {
-		return UserAuth{}, errors.Wrap(err, "Failed to deserialize UserAuthList")
-	}
-	return al.Get(addr)
+	return len(ual.Auths) > 0
 }
 
 func GetUserAuthList() (UserAuthList, error) {

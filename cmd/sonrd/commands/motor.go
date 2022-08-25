@@ -2,7 +2,6 @@ package commands
 
 import (
 	"github.com/kataras/golog"
-	"github.com/manifoldco/promptui"
 	"github.com/sonr-io/sonr/cmd/sonrd/utils"
 	"github.com/sonr-io/sonr/pkg/motor"
 	"github.com/sonr-io/sonr/third_party/types/common"
@@ -28,21 +27,23 @@ func loginCmd() *cobra.Command {
 		Use:   "login",
 		Short: "Login to an existing sonr account on disk",
 		Run: func(cmd *cobra.Command, args []string) {
-			prompt := promptui.Prompt{
-				Label: "Enter your Address",
-			}
-			accAddr, err := prompt.Run()
-			if err != nil {
-				logger.Errorf("Failed to run Prompt %e", err)
+			if ok := utils.PromptConfirm("Continue Login with System Keychain"); !ok {
+				logger.Infof("Aborting login.")
 				return
 			}
-			ua, err := utils.GetUserAuth(accAddr)
+
+			ual, err := utils.GetUserAuthList()
 			if err != nil {
-				logger.Errorf("Failed to fetch UserAuth %e", err)
+				logger.Errorf("Failed to fetch UserAuthList %e", err)
+				return
+			}
+			addr, ua, err := utils.PromptAccSelect(ual, "Select an account for login")
+			if err != nil {
+				logger.Errorf("Failed to select account %e", err)
 				return
 			}
 			req := mt.LoginRequest{
-				Did:       accAddr,
+				Did:       addr,
 				Password:  ua.Password,
 				AesPskKey: ua.AesPSKKey,
 				AesDscKey: ua.AesDSCKey,
@@ -53,7 +54,11 @@ func loginCmd() *cobra.Command {
 				logger.Errorf("Failed to login with UserAuth %e", err)
 				return
 			}
-			utils.DisplayAcc(m, "Logged In")
+			utils.DisplayMotorTable(m, "Logged In")
+			if err := utils.Set([]byte("currentAccount"), []byte(addr)); err != nil {
+				logger.Errorf("Failed to set currentAccount %e", err)
+				return
+			}
 		},
 	}
 	return cmd
@@ -64,7 +69,15 @@ func registerCmd() *cobra.Command {
 		Use:   "register",
 		Short: "Create a new Sonr Account",
 		Run: func(cmd *cobra.Command, args []string) {
-			passwd, err := utils.PromptPassword()
+			// Check if user already has an account
+			if exists := utils.HasUserAuth(); exists {
+				if yes := utils.PromptConfirm("You already have an account. Do you want to register a new one"); !yes {
+					logger.Infof("Aborting registration.")
+					return
+				}
+			}
+			logger.Infof("Registering new account...")
+			passwd, err := utils.PromptNewPassword()
 			if err != nil {
 				logger.Errorf("Failed to create account %e", err)
 			}
@@ -84,11 +97,13 @@ func registerCmd() *cobra.Command {
 				logger.Errorf("CreateAccount Error: %e", err)
 				return
 			}
-			if err := ua.StoreAuth(res.Address, res.GetAesPsk()); err != nil {
-				logger.Errorf("Failed to save UserAuth to Keychain %e", err)
-				return
+			if yes := utils.PromptConfirm("Would you like to store AuthInfo in the system keychain"); yes {
+				if err := ua.StoreAuth(res.Address, res.GetAesPsk()); err != nil {
+					logger.Errorf("Failed to save UserAuth to Keychain %e", err)
+					return
+				}
 			}
-			utils.DisplayAcc(m, "Account Registered")
+			utils.DisplayMotorTable(m, "Account Registered")
 		},
 	}
 	return cmd
@@ -99,12 +114,16 @@ func listCmd() *cobra.Command {
 		Use:   "list",
 		Short: "Lists all accounts on User Keychain",
 		Run: func(cmd *cobra.Command, args []string) {
+			if ok := utils.PromptConfirm("Logging in requires authorization over system Keychain."); !ok {
+				logger.Infof("Aborting list.")
+				return
+			}
 			ual, err := utils.GetUserAuthList()
 			if err != nil {
 				logger.Errorf("Failed to fetch UserAuthList %e", err)
 				return
 			}
-			utils.DisplayAccList(ual)
+			utils.DisplayAccListTable(ual)
 		},
 	}
 	return cmd
