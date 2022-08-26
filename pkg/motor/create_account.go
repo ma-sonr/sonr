@@ -1,7 +1,6 @@
 package motor
 
 import (
-	"errors"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -55,7 +54,7 @@ func (mtr *motorNodeImpl) CreateAccount(request mt.CreateAccountRequest) (mt.Cre
 
 	// ecnrypt dscShard with DSC
 	mtr.callback.OnLog("Encrypting Shards")
-	dscShard, err := dscEncrypt(mtr.deviceShard, request.AesDscKey)
+	dscShard, dsc, err := dscEncrypt(mtr.deviceShard, request.AesDscKey)
 	if err != nil {
 		return mt.CreateAccountResponse{}, fmt.Errorf("encrypt backup shards: %s", err)
 	}
@@ -104,6 +103,8 @@ func (mtr *motorNodeImpl) CreateAccount(request mt.CreateAccountRequest) (mt.Cre
 		AesPsk:      psk,
 		Address:     mtr.Address,
 		DidDocument: docBytes,
+		Password:    request.GetPassword(),
+		AesDsc:      dsc,
 	}, err
 }
 
@@ -171,9 +172,17 @@ func pskEncrypt(shard []byte) ([]byte, []byte, error) {
 	return cipherShard, key, nil
 }
 
-func dscEncrypt(shard, dsc []byte) ([]byte, error) {
+func dscEncrypt(shard, dsc []byte) ([]byte, []byte, error) {
 	if len(dsc) != 32 {
-		return nil, errors.New("dsc must be 32 bytes")
+		gendsc, err := mpc.NewAesKey()
+		if err != nil {
+			return nil, nil, err
+		}
+		dsc = gendsc
 	}
-	return mpc.AesEncryptWithKey(dsc, shard)
+	psk, err := mpc.AesEncryptWithKey(dsc, shard)
+	if err != nil {
+		return nil, nil, err
+	}
+	return psk, dsc, nil
 }
