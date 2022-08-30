@@ -11,9 +11,8 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 
 option go_package = "github.com/sonr-io/sonr/x/bucket/types";
-
-option java_package = "io.sonr.types.bucket";
 option java_multiple_files = true;
+option java_package = "io.sonr.types.bucket";
 
 // Query defines the gRPC querier service.
 service Query {
@@ -23,7 +22,7 @@ service Query {
   }
   // Queries a WhereIs by did and creator.
   rpc WhereIs(QueryGetWhereIsRequest) returns (QueryGetWhereIsResponse) {
-    option (google.api.http).get = "/sonr-io/sonr/bucket/where_is/{creator}/{did}";
+    option (google.api.http).get = "/sonr-io/sonr/bucket/where_is/by_id/{creator}/{did}";
   }
   // Queries all WhereIs by creator.
   rpc WhereIsByCreator(QueryGetWhereIsByCreatorRequest) returns (QueryGetWhereIsByCreatorResponse) {
