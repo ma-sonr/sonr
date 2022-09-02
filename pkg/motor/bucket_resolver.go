@@ -32,6 +32,9 @@ func (mtr *motorNodeImpl) GetBucket(did string) (bucket.Bucket, error) {
 
 		mtr.Resources.bucketStore[did] = b
 		for _, sb := range b.GetBuckets() {
+			if sb == nil {
+				return nil, fmt.Errorf("nil bucket during GetBucket: %v", sb)
+			}
 			mtr.Resources.bucketStore[sb.GetDID()] = sb
 		}
 	}

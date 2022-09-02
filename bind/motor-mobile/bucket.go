@@ -2,6 +2,7 @@ package motor
 
 import (
 	"context"
+	"fmt"
 
 	mt "github.com/sonr-io/sonr/third_party/types/motor"
 	bt "github.com/sonr-io/sonr/x/bucket/types"
@@ -126,7 +127,16 @@ func AddBucketObject(bucketDid string, obj []byte) error {
 		return err
 	}
 
-	newObjects := append(b.GetBucketItems(), newObject)
+	if b == nil {
+		return fmt.Errorf("could not get bucket with did '%s'", bucketDid)
+	}
+
+	items := b.GetBucketItems()
+	if items == nil {
+		items = make([]*bt.BucketItem, 0)
+	}
+
+	newObjects := append(items, newObject)
 	_, err = instance.UpdateBucketItems(context.Background(), bucketDid, newObjects)
 
 	return err

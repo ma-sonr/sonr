@@ -1,7 +1,6 @@
 package object
 
 import (
-	"errors"
 	"fmt"
 
 	mt "github.com/sonr-io/sonr/third_party/types/motor"
@@ -70,9 +69,12 @@ func (ob *ObjectBuilder) Has(field string) bool {
 
 // Build checks that the object is properly built and returns the map
 func (ob *ObjectBuilder) Build() (Object, error) {
-	if ob.label == "" {
-		return ob.values, errors.New("object is missing a label")
-	}
+	// TODO: add this check back when object storage is updated to include
+	// label and schema DID
+
+	// if ob.label == "" {
+	// 	return ob.values, errors.New("object is missing a label")
+	// }
 
 	missingFields := make([]string, 0)
 	for _, field := range ob.schema.GetFields() {
