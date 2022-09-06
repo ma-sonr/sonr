@@ -7,24 +7,49 @@ option go_package = "github.com/sonr-io/sonr/x/schema/types";
 option java_package = "io.sonr.types.schema";
 option java_multiple_files = true;
 
+// LinkKind is the kind of link between two entities.
 enum LinkKind {
+  // Unknown is the default value.
   UNKNOWN = 0;
+
+  // Points to an object.
   OBJECT = 1;
+
+  // Points to a schema.
   SCHEMA = 2;
+
+  // Points to a bucket
   BUCKET = 3;
 }
 
+// The kind of field in a schema property
 enum SchemaKind {
+  // List is the default value.
   LIST = 0;
+
+  // Boolean value (true or false)
   BOOL = 1;
+
+  // Integer value (64-bit)
   INT = 2;
+
+  // Float value (64-bit)
   FLOAT = 3;
+
+  // String value
   STRING = 4;
+
+  // Bytes value or buffer
   BYTES = 5;
+
+  // Link to another entity
   LINK = 6;
+
+  // Any value
   ANY = 7;
 }
 
+// The metadata for a schema property
 message MetadataDefintion {
   // key of the metadata
   string key = 1;
@@ -33,14 +58,18 @@ message MetadataDefintion {
   string value = 2;
 }
 
+// The definition of a schema property
 message SchemaKindDefinition {
+  // Name of the schema kind
   string name = 1;
+
   // Type of a single schema property
   SchemaKind field = 2;
 
   // Optional field for a link context if `SchemaKind` is of type `Link`
   LinkKind link_kind = 3;
 
+  // Optional field for a link context if `SchemaKind` is of type `Link`
   string link = 4;
 }
 
@@ -56,9 +85,9 @@ message SchemaReference {
   string cid = 3;
 }
 
+// Schem definition is the actual representation of a schema
 message SchemaDefinition {
-  // Represents the types of fields a schema can have
-  // the DID for this schema
+  // Represents the types of fields a schema can have the DID for this schema
   string did = 1;
 
   string creator = 2;

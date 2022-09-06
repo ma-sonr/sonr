@@ -10,49 +10,94 @@ option go_package = "github.com/sonr-io/sonr/x/bucket/types";
 option java_package = "io.sonr.types.bucket";
 option java_multiple_files = true;
 
-// Msg defines the Msg service.
+// The available Bucket module methods on the blockchain.
 service Msg {
+  // Create a new bucket
   rpc CreateWhereIs(MsgCreateWhereIs) returns (MsgCreateWhereIsResponse);
+
+  // Update an existing bucket
   rpc UpdateWhereIs(MsgUpdateWhereIs) returns (MsgUpdateWhereIsResponse);
+
+  // Delete an existing bucket
   rpc DeleteWhereIs(MsgDeleteWhereIs) returns (MsgDeleteWhereIsResponse);
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 
+// The message sent to the CreateWhereIs method in order to create a new bucket
 message MsgCreateWhereIs {
+  // The account address of the bucket creator
   string creator = 1;
+
+  // The human-readable name of the bucket
   string label = 2;
+
+  // The buckets public visibility setting
   BucketVisibility visibility = 3;
+
+  // The role of the bucket creator
   BucketRole role = 4;
+
+  // The list of items in the bucket
   repeated BucketItem content = 5;
+
+  // The list of users with access to the bucket
   map<string, AclJwks> content_acl = 6;
 }
 
+// The message returned by the CreateWhereIs method in order to confirm the creation of a new bucket
 message MsgCreateWhereIsResponse {
+  // The response status of the bucket creation
   int32 status = 1;
+
+  // The returned blockchain record of the bucket
   WhereIs where_is = 2;
 }
 
+// The message sent to the UpdateWhereIs method in order to update an existing bucket
 message MsgUpdateWhereIs {
+  // The account address of the bucket creator
   string creator = 1;
+
+  // The DID of the associated bucket
   string did = 2;
+
+  // The human-readable name of the bucket
   string label = 3;
+
+  // The buckets public visibility setting
   BucketVisibility visibility = 4;
+
+  // The role of the bucket creator
   BucketRole role = 5;
+
+  // The list of items in the bucket
   repeated BucketItem content = 6;
+
+  // The list of users with access to the bucket
   map<string, AclJwks> content_acl = 7;
 }
 
+// The message returned by the UpdateWhereIs method in order to confirm the update of an existing bucket
 message MsgUpdateWhereIsResponse {
+  // The response status of the bucket update
   int32 status = 1;
+
+  // The returned blockchain record of the bucket
   WhereIs where_is = 2;
 }
 
+// The message sent to the DeleteWhereIs method in order to delete an existing bucket
 message MsgDeleteWhereIs {
+  // The account address of the bucket creator
   string creator = 1;
+
+  // The DID of the associated bucket
   string did = 2;
 }
 
+// The message returned by the DeleteWhereIs method in order to confirm the deletion of an existing bucket
 message MsgDeleteWhereIsResponse {
+  // The response status of the bucket deletion
   int32 status = 1;
 }
 

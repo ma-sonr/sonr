@@ -15,22 +15,22 @@ option go_package = "github.com/sonr-io/sonr/x/bucket/types";
 option java_package = "io.sonr.types.bucket";
 option java_multiple_files = true;
 
-// Query defines the gRPC querier service.
+// Query defines the gRPC querier service for the bucket module.
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/sonr-io/sonr/bucket/params";
   }
-  // Queries a WhereIs by did and creator.
+  // Queries a Bucket record by did and creator.
   rpc WhereIs(QueryGetWhereIsRequest) returns (QueryGetWhereIsResponse) {
     option (google.api.http).get = "/sonr-io/sonr/bucket/where_is/{creator}/{did}";
   }
-  // Queries all WhereIs by creator.
+  // Queries all buckets for the given creator.
   rpc WhereIsByCreator(QueryGetWhereIsByCreatorRequest) returns (QueryGetWhereIsByCreatorResponse) {
     option (google.api.http).get = "/sonr-io/sonr/bucket/where_is/{creator}";
   }
 
-  // Queries a list of WhereIs items.
+  // Returns all buckets stored in the state.
   rpc WhereIsAll(QueryAllWhereIsRequest) returns (QueryAllWhereIsResponse) {
     option (google.api.http).get = "/sonr-io/sonr/bucket/where_is";
   }
@@ -47,31 +47,51 @@ message QueryParamsResponse {
   Params params = 1 [(gogoproto.nullable) = false];
 }
 
+// QueryGetWhereIsRequest is the message request to query a WhereIs by did and creator.
 message QueryGetWhereIsRequest {
+  // Creator is the account address of the owner of the WhereIs.
   string creator = 1;
+
+  // Did is the DID of the WhereIs.
   string did = 2;
 }
 
+// QueryGetWhereIsResponse is the message response for querying a WhereIs by did and creator.
 message QueryGetWhereIsResponse {
+  // The blockchain record for the bucket.
   WhereIs where_is = 1 [(gogoproto.nullable) = false];
 }
 
+// QueryGetWhereIsByCreatorRequest is the message request to query a WhereIs by creator.
 message QueryGetWhereIsByCreatorRequest {
+  // Creator is the account address of the owner of the WhereIs.
   string creator = 1;
+
+  // Pagination defines an optional pagination for the request.
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
+// QueryGetWhereIsByCreatorResponse is the message response for querying a WhereIs by creator.
 message QueryGetWhereIsByCreatorResponse {
+  // The blockchain record for the bucket.
   repeated WhereIs where_is = 1 [(gogoproto.nullable) = false];
+
+  // Pagination defines the pagination in the response.
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
+// QueryAllWhereIsRequest is request type for the Query/WhereIsAll RPC method.
 message QueryAllWhereIsRequest {
+  // Pagination defines an optional pagination for the request.
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
+// QueryAllWhereIsResponse is response type for the Query/WhereIsAll RPC method.
 message QueryAllWhereIsResponse {
+  // List of Bucket records.
   repeated WhereIs where_is = 1 [(gogoproto.nullable) = false];
+
+  // Pagination defines the pagination in the response.
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

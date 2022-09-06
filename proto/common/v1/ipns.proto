@@ -7,20 +7,32 @@ option go_package = "github.com/sonr-io/sonr/third_party/types/common";
 option java_package = "io.sonr.types.common";
 option java_multiple_files = true;
 
+// IpnsEntry is a record that is stored in IPNS.
 message IpnsEntry {
+  // ValidityType is the type of validity for the record.
   enum ValidityType {
     // setting an EOL says "this record is valid until..."
     EOL = 0;
   }
+
+  // Value is the value of the record.
   bytes value = 1;
+
+  // Signature of the owner of the record.
   bytes signature = 2;
 
+  // The Validity type of the record.
   ValidityType validityType = 3;
+
+  // The Validity of the record.
   bytes validity = 4;
 
+  // The sequence number of the record.
   uint64 sequence = 5;
 
+  // The time to live of the record.
   uint64 ttl = 6;
 
+  // The public key of the record.
   bytes pubKey = 7;
 }

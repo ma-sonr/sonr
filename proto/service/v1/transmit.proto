@@ -107,7 +107,7 @@ message Thumbnail {
   MIME mime = 2;    // Mime Type
 }
 
-
+// Session is the engagement of passing data between two peers.
 message Session {
   Direction direction = 1;
   common.v1.Peer from = 2;
@@ -119,6 +119,7 @@ message Session {
   map<int32, bool> results = 8;
 }
 
+// SessionItem is an item in a session
 message SessionItem {
   int32 index = 1;
   int32 count = 2;
@@ -130,6 +131,7 @@ message SessionItem {
   string path = 8;
 }
 
+// SessionPayload is the payload of a session
 message SessionPayload {
   Payload payload = 1;
   Direction direction = 2;

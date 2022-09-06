@@ -10,25 +10,44 @@ option java_multiple_files = true;
 
 // Basic Info Sent to Peers to Establish Connections
 message Peer {
-  string peer_id = 1;     // Peer ID of Libp2p Peer
-  string did = 2;       // User Sonr Domain
-  Status status = 3;      // Peer Status
+  // Peer ID of Libp2p Peer
+  string peer_id = 1;
+
+  // User Sonr Identity
+  string did = 2;
+
+  // Current Peer Status
+  Status status = 3;
 
   // Peers Active Status
   enum Status {
-    STATUS_UNSPECIFIED = 0; // Offline - Not Online or Not a Full Node
-    STATUS_ONLINE = 1;  // Online - Full Node Available
-    STATUS_AWAY = 2;    // Away - Not Online, but has a full node
-    STATUS_BUSY = 3;    // Busy - Online, but busy with Transfer
+    // Offline - Not Online or Not a Full Node
+    STATUS_UNSPECIFIED = 0;
+
+    // Online - Full Node Available
+    STATUS_ONLINE = 1;
+
+    // Away - Not Online, but has a full node
+    STATUS_AWAY = 2;
+
+    // Busy - Online, but busy with Transfer
+    STATUS_BUSY = 3;
   }
 }
 
+// EntityKind defines the type of entity being referenced
 enum EntityKind {
-    ADDRESS = 0;
-    DID = 1;
-    CID = 2;
+  // Address is a public key address
+  ADDRESS = 0;
+
+  // DID is a Decentralized Identifier per W3C
+  DID = 1;
+
+  // CID is a Content Identifier per IPFS
+  CID = 2;
 }
 
+// BlockchainModule is a helper enum to help identify the blockchain module for an action
 enum BlockchainModule {
     // Query x/registry module
     REGISTRY = 0;

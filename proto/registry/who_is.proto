@@ -9,6 +9,7 @@ option go_package = "github.com/sonr-io/sonr/x/registry/types";
 option java_package = "io.sonr.types.registry";
 option java_multiple_files = true;
 
+// WhoIs is the record of a DIDDocument stored in the registry module on the blockchain.
 message WhoIs {
   // Alias is the list of registered `alsoKnownAs` identifiers of the User or Application
   repeated Alias alias = 1;

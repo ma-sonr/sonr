@@ -14,7 +14,10 @@ option java_multiple_files = true;
 
 // GenesisState defines the bucket module's genesis state.
 message GenesisState {
+  // Initial params
   Params params = 1 [(gogoproto.nullable) = false];
+
+  // Initial Bucket list
   repeated WhereIs where_is_list = 2 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }

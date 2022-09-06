@@ -15,10 +15,12 @@ option go_package = "github.com/sonr-io/sonr/third_party/types/motor";
 option java_multiple_files = true;
 option java_package = "io.sonr.types.motor";
 
+// The response message returned after initializing a Motor node.
 message InitializeResponse {
   bool success = 1;
 }
 
+// The message returned after an Account is created.
 message CreateAccountResponse {
   bytes aes_psk = 1;
   string address = 2;
@@ -26,44 +28,71 @@ message CreateAccountResponse {
   sonrio.sonr.registry.WhoIs who_is = 4;
 }
 
+// The message returned after a user is logged in.
 message LoginResponse {
   bool success = 1;
   sonrio.sonr.registry.WhoIs who_is = 2;
 }
 
+// The message returned after a schema is created.
 message CreateSchemaResponse {
   int32 status = 1;
   sonrio.sonr.schema.WhatIs what_is = 2;
 }
 
+// The message returned after a generic query is made.
 message QueryResponse {
+  // The status of the method call.
   int32 code = 1;
+
+  // The provided query.
   string query = 2;
+
+  // The provided query module
   common.v1.BlockchainModule module = 3;
+
+  // The result of the query.
   repeated QueryResultItem results = 4;
 }
 
+// An item in the QueryResponse.
 message QueryResultItem {
+  // The identifier of the query result item
   string did = 1;
+
+  // The type of the query result item
   common.v1.EntityKind kind = 2;
+
+  // An optional whoIs result item
   sonrio.sonr.registry.WhoIs who_is = 3; //optional
+
+  // An optional whatIs result item
   sonrio.sonr.schema.WhatIs what_is = 4; //optional
+
+  // An optional schemaDefinition result item
   sonrio.sonr.schema.SchemaDefinition schema_definition = 5; //optional
+
+  // An optional whereIs result item
   sonrio.sonr.bucket.WhereIs where_is = 6; //optional
+
+  // An optional list of buckets
   repeated sonrio.sonr.bucket.WhereIs where_is_list = 7; //optional
 }
 
+// This is the message response for querying a whoIs by did
 message QueryWhoIsResponse {
   int32 code = 1;
   sonrio.sonr.registry.WhoIs who_is = 2;
 }
 
+// This is the message response for querying a whatIs by did and creator
 message QueryWhatIsResponse {
   int32 code = 1;
   sonrio.sonr.schema.WhatIs what_is = 2;
   sonrio.sonr.schema.SchemaDefinition schema = 3;
 }
 
+// This is the message response for querying a whoIs by did
 message QueryWhatIsByCreatorResponse {
   int32 code = 1;
   repeated sonrio.sonr.schema.WhatIs what_is = 2;

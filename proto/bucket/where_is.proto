@@ -6,6 +6,7 @@ option go_package = "github.com/sonr-io/sonr/x/bucket/types";
 option java_multiple_files = true;
 option java_package = "io.sonr.types.bucket";
 
+// WhereIs is the record stored on chain for a given bucket
 message WhereIs {
   // DID of the created bucket.
   string did = 1;
@@ -37,6 +38,7 @@ message WhereIs {
 
 // AclJwks is a map of JWKs for a given Schema
 message AclJwks {
+  // Encrypted JWKs for a given Schema and the associated DID as a map
   map<string, bytes> encrypted_jwks = 1;
 }
 
@@ -83,8 +85,14 @@ enum BucketVisibility {
   PRIVATE = 2;
 }
 
+// ResourceIdentifier is a type of resource.
 enum ResourceIdentifier {
+  // Resource is not specified.
   None = 0;
+
+  // DID is a reference to another bucket (WhereIs)
   DID = 1;
+
+  // CID is a reference to content (map[string]interface{})
   CID = 2;
 }
