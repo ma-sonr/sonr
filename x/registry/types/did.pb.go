@@ -22,6 +22,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// DIDDocument is a DID Document as defined by the W3C
 type DIDDocument struct {
 	Context              []string              `protobuf:"bytes,1,rep,name=context,proto3" json:"context,omitempty"`
 	Id                   string                `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`

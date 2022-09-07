@@ -27,12 +27,19 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// The message sent to the CreateWhereIs method in order to create a new bucket
 type MsgCreateWhereIs struct {
-	Creator    string              `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Label      string              `protobuf:"bytes,2,opt,name=label,proto3" json:"label,omitempty"`
-	Visibility BucketVisibility    `protobuf:"varint,3,opt,name=visibility,proto3,enum=sonrio.sonr.bucket.BucketVisibility" json:"visibility,omitempty"`
-	Role       BucketRole          `protobuf:"varint,4,opt,name=role,proto3,enum=sonrio.sonr.bucket.BucketRole" json:"role,omitempty"`
-	Content    []*BucketItem       `protobuf:"bytes,5,rep,name=content,proto3" json:"content,omitempty"`
+	// The account address of the bucket creator
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	// The human-readable name of the bucket
+	Label string `protobuf:"bytes,2,opt,name=label,proto3" json:"label,omitempty"`
+	// The buckets public visibility setting
+	Visibility BucketVisibility `protobuf:"varint,3,opt,name=visibility,proto3,enum=sonrio.sonr.bucket.BucketVisibility" json:"visibility,omitempty"`
+	// The role of the bucket creator
+	Role BucketRole `protobuf:"varint,4,opt,name=role,proto3,enum=sonrio.sonr.bucket.BucketRole" json:"role,omitempty"`
+	// The list of items in the bucket
+	Content []*BucketItem `protobuf:"bytes,5,rep,name=content,proto3" json:"content,omitempty"`
+	// The list of users with access to the bucket
 	ContentAcl map[string]*AclJwks `protobuf:"bytes,6,rep,name=content_acl,json=contentAcl,proto3" json:"content_acl,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 
@@ -111,8 +118,11 @@ func (m *MsgCreateWhereIs) GetContentAcl() map[string]*AclJwks {
 	return nil
 }
 
+// The message returned by the CreateWhereIs method in order to confirm the creation of a new bucket
 type MsgCreateWhereIsResponse struct {
-	Status  int32    `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
+	// The response status of the bucket creation
+	Status int32 `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
+	// The returned blockchain record of the bucket
 	WhereIs *WhereIs `protobuf:"bytes,2,opt,name=where_is,json=whereIs,proto3" json:"where_is,omitempty"`
 }
 
@@ -163,13 +173,21 @@ func (m *MsgCreateWhereIsResponse) GetWhereIs() *WhereIs {
 	return nil
 }
 
+// The message sent to the UpdateWhereIs method in order to update an existing bucket
 type MsgUpdateWhereIs struct {
-	Creator    string              `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Did        string              `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
-	Label      string              `protobuf:"bytes,3,opt,name=label,proto3" json:"label,omitempty"`
-	Visibility BucketVisibility    `protobuf:"varint,4,opt,name=visibility,proto3,enum=sonrio.sonr.bucket.BucketVisibility" json:"visibility,omitempty"`
-	Role       BucketRole          `protobuf:"varint,5,opt,name=role,proto3,enum=sonrio.sonr.bucket.BucketRole" json:"role,omitempty"`
-	Content    []*BucketItem       `protobuf:"bytes,6,rep,name=content,proto3" json:"content,omitempty"`
+	// The account address of the bucket creator
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	// The DID of the associated bucket
+	Did string `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
+	// The human-readable name of the bucket
+	Label string `protobuf:"bytes,3,opt,name=label,proto3" json:"label,omitempty"`
+	// The buckets public visibility setting
+	Visibility BucketVisibility `protobuf:"varint,4,opt,name=visibility,proto3,enum=sonrio.sonr.bucket.BucketVisibility" json:"visibility,omitempty"`
+	// The role of the bucket creator
+	Role BucketRole `protobuf:"varint,5,opt,name=role,proto3,enum=sonrio.sonr.bucket.BucketRole" json:"role,omitempty"`
+	// The list of items in the bucket
+	Content []*BucketItem `protobuf:"bytes,6,rep,name=content,proto3" json:"content,omitempty"`
+	// The list of users with access to the bucket
 	ContentAcl map[string]*AclJwks `protobuf:"bytes,7,rep,name=content_acl,json=contentAcl,proto3" json:"content_acl,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 
@@ -255,8 +273,11 @@ func (m *MsgUpdateWhereIs) GetContentAcl() map[string]*AclJwks {
 	return nil
 }
 
+// The message returned by the UpdateWhereIs method in order to confirm the update of an existing bucket
 type MsgUpdateWhereIsResponse struct {
-	Status  int32    `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
+	// The response status of the bucket update
+	Status int32 `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
+	// The returned blockchain record of the bucket
 	WhereIs *WhereIs `protobuf:"bytes,2,opt,name=where_is,json=whereIs,proto3" json:"where_is,omitempty"`
 }
 
@@ -307,9 +328,12 @@ func (m *MsgUpdateWhereIsResponse) GetWhereIs() *WhereIs {
 	return nil
 }
 
+// The message sent to the DeleteWhereIs method in order to delete an existing bucket
 type MsgDeleteWhereIs struct {
+	// The account address of the bucket creator
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Did     string `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
+	// The DID of the associated bucket
+	Did string `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
 }
 
 func (m *MsgDeleteWhereIs) Reset()         { *m = MsgDeleteWhereIs{} }
@@ -359,7 +383,9 @@ func (m *MsgDeleteWhereIs) GetDid() string {
 	return ""
 }
 
+// The message returned by the DeleteWhereIs method in order to confirm the deletion of an existing bucket
 type MsgDeleteWhereIsResponse struct {
+	// The response status of the bucket deletion
 	Status int32 `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
 }
 
@@ -465,8 +491,11 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
+	// Create a new bucket
 	CreateWhereIs(ctx context.Context, in *MsgCreateWhereIs, opts ...grpc.CallOption) (*MsgCreateWhereIsResponse, error)
+	// Update an existing bucket
 	UpdateWhereIs(ctx context.Context, in *MsgUpdateWhereIs, opts ...grpc.CallOption) (*MsgUpdateWhereIsResponse, error)
+	// Delete an existing bucket
 	DeleteWhereIs(ctx context.Context, in *MsgDeleteWhereIs, opts ...grpc.CallOption) (*MsgDeleteWhereIsResponse, error)
 }
 
@@ -507,8 +536,11 @@ func (c *msgClient) DeleteWhereIs(ctx context.Context, in *MsgDeleteWhereIs, opt
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
+	// Create a new bucket
 	CreateWhereIs(context.Context, *MsgCreateWhereIs) (*MsgCreateWhereIsResponse, error)
+	// Update an existing bucket
 	UpdateWhereIs(context.Context, *MsgUpdateWhereIs) (*MsgUpdateWhereIsResponse, error)
+	// Delete an existing bucket
 	DeleteWhereIs(context.Context, *MsgDeleteWhereIs) (*MsgDeleteWhereIsResponse, error)
 }
 

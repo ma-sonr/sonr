@@ -86,12 +86,16 @@ func (BucketVisibility) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_9d51d2bd3c178d08, []int{1}
 }
 
+// ResourceIdentifier is a type of resource.
 type ResourceIdentifier int32
 
 const (
+	// Resource is not specified.
 	ResourceIdentifier_None ResourceIdentifier = 0
-	ResourceIdentifier_DID  ResourceIdentifier = 1
-	ResourceIdentifier_CID  ResourceIdentifier = 2
+	// DID is a reference to another bucket (WhereIs)
+	ResourceIdentifier_DID ResourceIdentifier = 1
+	// CID is a reference to content (map[string]interface{})
+	ResourceIdentifier_CID ResourceIdentifier = 2
 )
 
 var ResourceIdentifier_name = map[int32]string{
@@ -114,6 +118,7 @@ func (ResourceIdentifier) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_9d51d2bd3c178d08, []int{2}
 }
 
+// WhereIs is the record stored on chain for a given bucket
 type WhereIs struct {
 	// DID of the created bucket.
 	Did string `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
@@ -233,6 +238,7 @@ func (m *WhereIs) GetTimestamp() int64 {
 
 // AclJwks is a map of JWKs for a given Schema
 type AclJwks struct {
+	// Encrypted JWKs for a given Schema and the associated DID as a map
 	EncryptedJwks map[string][]byte `protobuf:"bytes,1,rep,name=encrypted_jwks,json=encryptedJwks,proto3" json:"encrypted_jwks,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 

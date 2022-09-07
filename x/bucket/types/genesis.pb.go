@@ -25,7 +25,9 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // GenesisState defines the bucket module's genesis state.
 type GenesisState struct {
-	Params      Params    `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
+	// Initial params
+	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
+	// Initial Bucket list
 	WhereIsList []WhereIs `protobuf:"bytes,2,rep,name=where_is_list,json=whereIsList,proto3" json:"where_is_list"`
 }
 

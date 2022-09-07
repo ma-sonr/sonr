@@ -800,11 +800,17 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
+	// Create a new account or application on the registry.
 	CreateWhoIs(ctx context.Context, in *MsgCreateWhoIs, opts ...grpc.CallOption) (*MsgCreateWhoIsResponse, error)
+	// Update an existing account or application on the registry.
 	UpdateWhoIs(ctx context.Context, in *MsgUpdateWhoIs, opts ...grpc.CallOption) (*MsgUpdateWhoIsResponse, error)
+	// Deactivate an existing account or application on the registry.
 	DeactivateWhoIs(ctx context.Context, in *MsgDeactivateWhoIs, opts ...grpc.CallOption) (*MsgDeactivateWhoIsResponse, error)
+	// Buy a domain name.
 	BuyAlias(ctx context.Context, in *MsgBuyAlias, opts ...grpc.CallOption) (*MsgBuyAliasResponse, error)
+	// Sell a domain name.
 	SellAlias(ctx context.Context, in *MsgSellAlias, opts ...grpc.CallOption) (*MsgSellAliasResponse, error)
+	// Transfer a domain name.
 	TransferAlias(ctx context.Context, in *MsgTransferAlias, opts ...grpc.CallOption) (*MsgTransferAliasResponse, error)
 }
 
@@ -872,11 +878,17 @@ func (c *msgClient) TransferAlias(ctx context.Context, in *MsgTransferAlias, opt
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
+	// Create a new account or application on the registry.
 	CreateWhoIs(context.Context, *MsgCreateWhoIs) (*MsgCreateWhoIsResponse, error)
+	// Update an existing account or application on the registry.
 	UpdateWhoIs(context.Context, *MsgUpdateWhoIs) (*MsgUpdateWhoIsResponse, error)
+	// Deactivate an existing account or application on the registry.
 	DeactivateWhoIs(context.Context, *MsgDeactivateWhoIs) (*MsgDeactivateWhoIsResponse, error)
+	// Buy a domain name.
 	BuyAlias(context.Context, *MsgBuyAlias) (*MsgBuyAliasResponse, error)
+	// Sell a domain name.
 	SellAlias(context.Context, *MsgSellAlias) (*MsgSellAliasResponse, error)
+	// Transfer a domain name.
 	TransferAlias(context.Context, *MsgTransferAlias) (*MsgTransferAliasResponse, error)
 }
 

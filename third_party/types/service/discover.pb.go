@@ -94,10 +94,14 @@ func (m *LobbyMessage) GetCreatedAt() int64 {
 	return 0
 }
 
+// RefresEvent is a message that contains a list of peers in the current pub/sub topic
 type RefreshEvent struct {
-	TopicName  string         `protobuf:"bytes,1,opt,name=topic_name,json=topicName,proto3" json:"topic_name,omitempty"`
-	Peers      []*common.Peer `protobuf:"bytes,2,rep,name=peers,proto3" json:"peers,omitempty"`
-	ReceivedAt int64          `protobuf:"varint,3,opt,name=received_at,json=receivedAt,proto3" json:"received_at,omitempty"`
+	// Name of the topic
+	TopicName string `protobuf:"bytes,1,opt,name=topic_name,json=topicName,proto3" json:"topic_name,omitempty"`
+	// List of peers in the topic
+	Peers []*common.Peer `protobuf:"bytes,2,rep,name=peers,proto3" json:"peers,omitempty"`
+	// Timestamp of the event
+	ReceivedAt int64 `protobuf:"varint,3,opt,name=received_at,json=receivedAt,proto3" json:"received_at,omitempty"`
 }
 
 func (m *RefreshEvent) Reset()         { *m = RefreshEvent{} }

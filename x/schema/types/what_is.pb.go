@@ -22,6 +22,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// WhatIs is the blockchain record of a SchemaDefinition on the blockchain.
 type WhatIs struct {
 	// DID is the DID of the object
 	Did string `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`

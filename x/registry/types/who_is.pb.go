@@ -50,6 +50,7 @@ func (WhoIsType) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_9d9bdfc8d37d9424, []int{0}
 }
 
+// WhoIs is the record of a DIDDocument stored in the registry module on the blockchain.
 type WhoIs struct {
 	// Alias is the list of registered `alsoKnownAs` identifiers of the User or Application
 	Alias []*Alias `protobuf:"bytes,1,rep,name=alias,proto3" json:"alias,omitempty"`

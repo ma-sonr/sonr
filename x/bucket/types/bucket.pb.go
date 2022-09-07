@@ -24,15 +24,13 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-//
-//Wraps items within a bucket. Items will be one of the following
-//DID -> reference to another bucket (WhereIs)
-//CID -> reference to content (map[string]interface{})
+// BucketContent Wraps items within a bucket. Items will be one of the following
 type BucketContent struct {
 	// Raw content serialized to bytes
 	Item []byte `protobuf:"bytes,1,opt,name=item,proto3" json:"item,omitempty"`
 	// Content id a CID, DID, or unspecified
-	Id          string             `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
+	Id string `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
+	// Content type either a DID or CID
 	ContentType ResourceIdentifier `protobuf:"varint,3,opt,name=content_type,json=contentType,proto3,enum=sonrio.sonr.bucket.ResourceIdentifier" json:"content_type,omitempty"`
 }
 

@@ -28,10 +28,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// -----------------------------------------------------------------------------
-// Motor Node API
-// -----------------------------------------------------------------------------
-// (Client) InitializeRequest Message to Establish Sonr Host/API/Room
+// InitializeRequest is the request sent to the Initialize method to setup the motor node
 type InitializeRequest struct {
 	// Identifier of this Device
 	DeviceId string `protobuf:"bytes,1,opt,name=device_id,json=deviceId,proto3" json:"device_id,omitempty"`
@@ -160,9 +157,12 @@ func (m *InitializeRequest) GetDeviceKeyprintPub() []byte {
 
 // CreateAccount Request contains the three keys needed to create an account on Sonr
 type CreateAccountRequest struct {
-	Password  string            `protobuf:"bytes,1,opt,name=password,proto3" json:"password,omitempty"`
-	AesDscKey []byte            `protobuf:"bytes,2,opt,name=aes_dsc_key,json=aesDscKey,proto3" json:"aes_dsc_key,omitempty"`
-	Metadata  map[string]string `protobuf:"bytes,3,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	// The user specified password
+	Password string `protobuf:"bytes,1,opt,name=password,proto3" json:"password,omitempty"`
+	// The device generated random 32 byte key thats stored in secure storage
+	AesDscKey []byte `protobuf:"bytes,2,opt,name=aes_dsc_key,json=aesDscKey,proto3" json:"aes_dsc_key,omitempty"`
+	// Any additional data that needs to be stored in the account
+	Metadata map[string]string `protobuf:"bytes,3,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 
 func (m *CreateAccountRequest) Reset()         { *m = CreateAccountRequest{} }
@@ -219,13 +219,15 @@ func (m *CreateAccountRequest) GetMetadata() map[string]string {
 	return nil
 }
 
-// Login requires the DID of the account being logged into,
-// and optionally a password if the vault pw is being used
-// The PSK and DSC will be fetched from the keychain
+// Login requires the DID of the account being logged into, and optionally a password if the vault pw is being used. The PSK and DSC will be fetched from the keychain
 type LoginRequest struct {
-	Did       string `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Password  string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	// The DID of the account being logged into
+	Did string `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
+	// The user specified password
+	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	// The device generated random 32 byte key thats stored in secure storage
 	AesDscKey []byte `protobuf:"bytes,3,opt,name=aes_dsc_key,json=aesDscKey,proto3" json:"aes_dsc_key,omitempty"`
+	// The signed challenge from the Motor node also used for authentication
 	AesPskKey []byte `protobuf:"bytes,4,opt,name=aes_psk_key,json=aesPskKey,proto3" json:"aes_psk_key,omitempty"`
 }
 
@@ -290,9 +292,13 @@ func (m *LoginRequest) GetAesPskKey() []byte {
 	return nil
 }
 
+// QueryRequest is a generic request for querying the Motor node
 type QueryRequest struct {
-	Query  string                  `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	Kind   common.EntityKind       `protobuf:"varint,2,opt,name=kind,proto3,enum=sonrio.common.v1.EntityKind" json:"kind,omitempty"`
+	// The query to be executed
+	Query string `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
+	// The query entity type
+	Kind common.EntityKind `protobuf:"varint,2,opt,name=kind,proto3,enum=sonrio.common.v1.EntityKind" json:"kind,omitempty"`
+	// The module to execute the query on
 	Module common.BlockchainModule `protobuf:"varint,3,opt,name=module,proto3,enum=sonrio.common.v1.BlockchainModule" json:"module,omitempty"`
 }
 
@@ -350,11 +356,16 @@ func (m *QueryRequest) GetModule() common.BlockchainModule {
 	return common.BlockchainModule_REGISTRY
 }
 
+// This is a request to issue a payment to a given account
 type PaymentRequest struct {
-	To     string `protobuf:"bytes,1,opt,name=to,proto3" json:"to,omitempty"`
-	From   string `protobuf:"bytes,2,opt,name=from,proto3" json:"from,omitempty"`
-	Amount int64  `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
-	Memo   string `protobuf:"bytes,4,opt,name=memo,proto3" json:"memo,omitempty"`
+	// Address of the account to send the payment to
+	To string `protobuf:"bytes,1,opt,name=to,proto3" json:"to,omitempty"`
+	// Address of the account to send the payment from
+	From string `protobuf:"bytes,2,opt,name=from,proto3" json:"from,omitempty"`
+	// Amount of the payment
+	Amount int64 `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
+	// An optional note to be included in the payment
+	Memo string `protobuf:"bytes,4,opt,name=memo,proto3" json:"memo,omitempty"`
 }
 
 func (m *PaymentRequest) Reset()         { *m = PaymentRequest{} }
@@ -418,10 +429,9 @@ func (m *PaymentRequest) GetMemo() string {
 	return ""
 }
 
-// -----------------------------------------------------------------------------
-// Registry Models
-// -----------------------------------------------------------------------------
+// Query the blockchain for a specific WhoIs record for a DID
 type QueryWhoIsRequest struct {
+	// DID to query for
 	Did string `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
 }
 
@@ -465,13 +475,14 @@ func (m *QueryWhoIsRequest) GetDid() string {
 	return ""
 }
 
-// -----------------------------------------------------------------------------
-// Schema Models
-// -----------------------------------------------------------------------------
+// A request to create a new schema definition on the blockchain
 type CreateSchemaRequest struct {
-	Label    string                      `protobuf:"bytes,1,opt,name=label,proto3" json:"label,omitempty"`
-	Fields   map[string]types.SchemaKind `protobuf:"bytes,2,rep,name=fields,proto3" json:"fields,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3,enum=sonrio.sonr.schema.SchemaKind"`
-	Metadata map[string]string           `protobuf:"bytes,3,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	// A human readable name for the schema
+	Label string `protobuf:"bytes,1,opt,name=label,proto3" json:"label,omitempty"`
+	// The fields that make up the schema
+	Fields map[string]types.SchemaKind `protobuf:"bytes,2,rep,name=fields,proto3" json:"fields,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3,enum=sonrio.sonr.schema.SchemaKind"`
+	// Any additional data that needs to be stored in the schema
+	Metadata map[string]string `protobuf:"bytes,3,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 
 func (m *CreateSchemaRequest) Reset()         { *m = CreateSchemaRequest{} }
@@ -528,9 +539,12 @@ func (m *CreateSchemaRequest) GetMetadata() map[string]string {
 	return nil
 }
 
+// A request to search for a WhatIs on the blockchain
 type QueryWhatIsRequest struct {
+	// The creator of the schema
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Did     string `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
+	// The did of the schema
+	Did string `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
 }
 
 func (m *QueryWhatIsRequest) Reset()         { *m = QueryWhatIsRequest{} }
@@ -580,7 +594,9 @@ func (m *QueryWhatIsRequest) GetDid() string {
 	return ""
 }
 
+// A request to return all schemas created by a given account
 type QueryWhatIsByCreatorRequest struct {
+	// The creator of the schemas
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 }
 
@@ -624,9 +640,12 @@ func (m *QueryWhatIsByCreatorRequest) GetCreator() string {
 	return ""
 }
 
+// A request to query for a specific schema definition on the blockchain
 type QuerySchemaRequest struct {
+	// The creator of the schema
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Did     string `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
+	// The did of the schema
+	Did string `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
 }
 
 func (m *QuerySchemaRequest) Reset()         { *m = QuerySchemaRequest{} }
@@ -676,12 +695,12 @@ func (m *QuerySchemaRequest) GetDid() string {
 	return ""
 }
 
-// -----------------------------------------------------------------------------
-// Bucket Models
-// -----------------------------------------------------------------------------
+// A request to query for a bucket by user/bucket_did
 type QueryWhereIsRequest struct {
+	// The user that owns the bucket
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Did     string `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
+	// The did of the bucket
+	Did string `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
 }
 
 func (m *QueryWhereIsRequest) Reset()         { *m = QueryWhereIsRequest{} }
@@ -731,7 +750,9 @@ func (m *QueryWhereIsRequest) GetDid() string {
 	return ""
 }
 
+// A request to return all buckets created by a given account
 type QueryWhereIsByCreatorRequest struct {
+	// The creator of the buckets
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 }
 
@@ -775,12 +796,18 @@ func (m *QueryWhereIsByCreatorRequest) GetCreator() string {
 	return ""
 }
 
+// A request to create a new bucket on the blockchain
 type CreateBucketRequest struct {
-	Creator    string                  `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Label      string                  `protobuf:"bytes,2,opt,name=label,proto3" json:"label,omitempty"`
+	// The address of the bucket owner
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	// The name of the bucket
+	Label string `protobuf:"bytes,2,opt,name=label,proto3" json:"label,omitempty"`
+	// The public visibility of the bucket
 	Visibility types1.BucketVisibility `protobuf:"varint,3,opt,name=visibility,proto3,enum=sonrio.sonr.bucket.BucketVisibility" json:"visibility,omitempty"`
-	Role       types1.BucketRole       `protobuf:"varint,4,opt,name=role,proto3,enum=sonrio.sonr.bucket.BucketRole" json:"role,omitempty"`
-	Content    []*types1.BucketItem    `protobuf:"bytes,5,rep,name=content,proto3" json:"content,omitempty"`
+	// The role of the bucket owner
+	Role types1.BucketRole `protobuf:"varint,4,opt,name=role,proto3,enum=sonrio.sonr.bucket.BucketRole" json:"role,omitempty"`
+	// The items that make up the bucket
+	Content []*types1.BucketItem `protobuf:"bytes,5,rep,name=content,proto3" json:"content,omitempty"`
 }
 
 func (m *CreateBucketRequest) Reset()         { *m = CreateBucketRequest{} }
@@ -851,13 +878,20 @@ func (m *CreateBucketRequest) GetContent() []*types1.BucketItem {
 	return nil
 }
 
+// This message is used to update a bucket configuration
 type UpdateBucketRequest struct {
-	Creator    string                  `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Did        string                  `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
-	Label      string                  `protobuf:"bytes,3,opt,name=label,proto3" json:"label,omitempty"`
+	// The address of the account that owns the bucket
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	// The DID of the bucket
+	Did string `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
+	// The human readable name of the bucket
+	Label string `protobuf:"bytes,3,opt,name=label,proto3" json:"label,omitempty"`
+	// The visibility of the bucket
 	Visibility types1.BucketVisibility `protobuf:"varint,4,opt,name=visibility,proto3,enum=sonrio.sonr.bucket.BucketVisibility" json:"visibility,omitempty"`
-	Role       types1.BucketRole       `protobuf:"varint,5,opt,name=role,proto3,enum=sonrio.sonr.bucket.BucketRole" json:"role,omitempty"`
-	Content    []*types1.BucketItem    `protobuf:"bytes,6,rep,name=content,proto3" json:"content,omitempty"`
+	// The role of the account making the request
+	Role types1.BucketRole `protobuf:"varint,5,opt,name=role,proto3,enum=sonrio.sonr.bucket.BucketRole" json:"role,omitempty"`
+	// The items to be added to the bucket
+	Content []*types1.BucketItem `protobuf:"bytes,6,rep,name=content,proto3" json:"content,omitempty"`
 }
 
 func (m *UpdateBucketRequest) Reset()         { *m = UpdateBucketRequest{} }
@@ -935,6 +969,7 @@ func (m *UpdateBucketRequest) GetContent() []*types1.BucketItem {
 	return nil
 }
 
+// This request searches a bucket for a specific item
 type SeachBucketContentBySchemaRequest struct {
 	// Address of bucket owner
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`

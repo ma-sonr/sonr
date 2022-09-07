@@ -24,12 +24,16 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// EntityKind defines the type of entity being referenced
 type EntityKind int32
 
 const (
+	// Address is a public key address
 	EntityKind_ADDRESS EntityKind = 0
-	EntityKind_DID     EntityKind = 1
-	EntityKind_CID     EntityKind = 2
+	// DID is a Decentralized Identifier per W3C
+	EntityKind_DID EntityKind = 1
+	// CID is a Content Identifier per IPFS
+	EntityKind_CID EntityKind = 2
 )
 
 var EntityKind_name = map[int32]string{
@@ -52,6 +56,7 @@ func (EntityKind) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_a6ffb5b3e6a498f4, []int{0}
 }
 
+// BlockchainModule is a helper enum to help identify the blockchain module for an action
 type BlockchainModule int32
 
 const (
@@ -87,10 +92,14 @@ func (BlockchainModule) EnumDescriptor() ([]byte, []int) {
 type Peer_Status int32
 
 const (
+	// Offline - Not Online or Not a Full Node
 	Peer_STATUS_UNSPECIFIED Peer_Status = 0
-	Peer_STATUS_ONLINE      Peer_Status = 1
-	Peer_STATUS_AWAY        Peer_Status = 2
-	Peer_STATUS_BUSY        Peer_Status = 3
+	// Online - Full Node Available
+	Peer_STATUS_ONLINE Peer_Status = 1
+	// Away - Not Online, but has a full node
+	Peer_STATUS_AWAY Peer_Status = 2
+	// Busy - Online, but busy with Transfer
+	Peer_STATUS_BUSY Peer_Status = 3
 )
 
 var Peer_Status_name = map[int32]string{
@@ -117,8 +126,11 @@ func (Peer_Status) EnumDescriptor() ([]byte, []int) {
 
 // Basic Info Sent to Peers to Establish Connections
 type Peer struct {
-	PeerId string      `protobuf:"bytes,1,opt,name=peer_id,json=peerId,proto3" json:"peer_id,omitempty"`
-	Did    string      `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
+	// Peer ID of Libp2p Peer
+	PeerId string `protobuf:"bytes,1,opt,name=peer_id,json=peerId,proto3" json:"peer_id,omitempty"`
+	// User Sonr Identity
+	Did string `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
+	// Current Peer Status
 	Status Peer_Status `protobuf:"varint,3,opt,name=status,proto3,enum=sonrio.common.v1.Peer_Status" json:"status,omitempty"`
 }
 

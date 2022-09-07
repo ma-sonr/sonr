@@ -22,13 +22,18 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// LinkKind is the kind of link between two entities.
 type LinkKind int32
 
 const (
+	// Unknown is the default value.
 	LinkKind_UNKNOWN LinkKind = 0
-	LinkKind_OBJECT  LinkKind = 1
-	LinkKind_SCHEMA  LinkKind = 2
-	LinkKind_BUCKET  LinkKind = 3
+	// Points to an object.
+	LinkKind_OBJECT LinkKind = 1
+	// Points to a schema.
+	LinkKind_SCHEMA LinkKind = 2
+	// Points to a bucket
+	LinkKind_BUCKET LinkKind = 3
 )
 
 var LinkKind_name = map[int32]string{
@@ -53,17 +58,26 @@ func (LinkKind) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_a184c368e8c5a046, []int{0}
 }
 
+// The kind of field in a schema property
 type SchemaKind int32
 
 const (
-	SchemaKind_LIST   SchemaKind = 0
-	SchemaKind_BOOL   SchemaKind = 1
-	SchemaKind_INT    SchemaKind = 2
-	SchemaKind_FLOAT  SchemaKind = 3
+	// List is the default value.
+	SchemaKind_LIST SchemaKind = 0
+	// Boolean value (true or false)
+	SchemaKind_BOOL SchemaKind = 1
+	// Integer value (64-bit)
+	SchemaKind_INT SchemaKind = 2
+	// Float value (64-bit)
+	SchemaKind_FLOAT SchemaKind = 3
+	// String value
 	SchemaKind_STRING SchemaKind = 4
-	SchemaKind_BYTES  SchemaKind = 5
-	SchemaKind_LINK   SchemaKind = 6
-	SchemaKind_ANY    SchemaKind = 7
+	// Bytes value or buffer
+	SchemaKind_BYTES SchemaKind = 5
+	// Link to another entity
+	SchemaKind_LINK SchemaKind = 6
+	// Any value
+	SchemaKind_ANY SchemaKind = 7
 )
 
 var SchemaKind_name = map[int32]string{
@@ -96,6 +110,7 @@ func (SchemaKind) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_a184c368e8c5a046, []int{1}
 }
 
+// The metadata for a schema property
 type MetadataDefintion struct {
 	// key of the metadata
 	Key string `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
@@ -150,13 +165,16 @@ func (m *MetadataDefintion) GetValue() string {
 	return ""
 }
 
+// The definition of a schema property
 type SchemaKindDefinition struct {
+	// Name of the schema kind
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// Type of a single schema property
 	Field SchemaKind `protobuf:"varint,2,opt,name=field,proto3,enum=sonrio.sonr.schema.SchemaKind" json:"field,omitempty"`
 	// Optional field for a link context if `SchemaKind` is of type `Link`
 	LinkKind LinkKind `protobuf:"varint,3,opt,name=link_kind,json=linkKind,proto3,enum=sonrio.sonr.schema.LinkKind" json:"link_kind,omitempty"`
-	Link     string   `protobuf:"bytes,4,opt,name=link,proto3" json:"link,omitempty"`
+	// Optional field for a link context if `SchemaKind` is of type `Link`
+	Link string `protobuf:"bytes,4,opt,name=link,proto3" json:"link,omitempty"`
 }
 
 func (m *SchemaKindDefinition) Reset()         { *m = SchemaKindDefinition{} }
@@ -284,9 +302,9 @@ func (m *SchemaReference) GetCid() string {
 	return ""
 }
 
+// Schem definition is the actual representation of a schema
 type SchemaDefinition struct {
-	// Represents the types of fields a schema can have
-	// the DID for this schema
+	// Represents the types of fields a schema can have the DID for this schema
 	Did     string `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
 	Creator string `protobuf:"bytes,2,opt,name=creator,proto3" json:"creator,omitempty"`
 	// an alternative reference point

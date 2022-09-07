@@ -22,6 +22,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// ValidityType is the type of validity for the record.
 type IpnsEntry_ValidityType int32
 
 const (
@@ -45,14 +46,22 @@ func (IpnsEntry_ValidityType) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_5738f9ecddc69498, []int{0, 0}
 }
 
+// IpnsEntry is a record that is stored in IPNS.
 type IpnsEntry struct {
-	Value        []byte                 `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
-	Signature    []byte                 `protobuf:"bytes,2,opt,name=signature,proto3" json:"signature,omitempty"`
+	// Value is the value of the record.
+	Value []byte `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
+	// Signature of the owner of the record.
+	Signature []byte `protobuf:"bytes,2,opt,name=signature,proto3" json:"signature,omitempty"`
+	// The Validity type of the record.
 	ValidityType IpnsEntry_ValidityType `protobuf:"varint,3,opt,name=validityType,proto3,enum=sonrio.common.v1.IpnsEntry_ValidityType" json:"validityType,omitempty"`
-	Validity     []byte                 `protobuf:"bytes,4,opt,name=validity,proto3" json:"validity,omitempty"`
-	Sequence     uint64                 `protobuf:"varint,5,opt,name=sequence,proto3" json:"sequence,omitempty"`
-	Ttl          uint64                 `protobuf:"varint,6,opt,name=ttl,proto3" json:"ttl,omitempty"`
-	PubKey       []byte                 `protobuf:"bytes,7,opt,name=pubKey,proto3" json:"pubKey,omitempty"`
+	// The Validity of the record.
+	Validity []byte `protobuf:"bytes,4,opt,name=validity,proto3" json:"validity,omitempty"`
+	// The sequence number of the record.
+	Sequence uint64 `protobuf:"varint,5,opt,name=sequence,proto3" json:"sequence,omitempty"`
+	// The time to live of the record.
+	Ttl uint64 `protobuf:"varint,6,opt,name=ttl,proto3" json:"ttl,omitempty"`
+	// The public key of the record.
+	PubKey []byte `protobuf:"bytes,7,opt,name=pubKey,proto3" json:"pubKey,omitempty"`
 }
 
 func (m *IpnsEntry) Reset()         { *m = IpnsEntry{} }

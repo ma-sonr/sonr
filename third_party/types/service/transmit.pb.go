@@ -559,6 +559,7 @@ func (m *Thumbnail) GetMime() *MIME {
 	return nil
 }
 
+// Session is the engagement of passing data between two peers.
 type Session struct {
 	Direction    Direction      `protobuf:"varint,1,opt,name=direction,proto3,enum=sonrio.motor.service.v1.Direction" json:"direction,omitempty"`
 	From         *common.Peer   `protobuf:"bytes,2,opt,name=from,proto3" json:"from,omitempty"`
@@ -659,6 +660,7 @@ func (m *Session) GetResults() map[int32]bool {
 	return nil
 }
 
+// SessionItem is an item in a session
 type SessionItem struct {
 	Index     int32     `protobuf:"varint,1,opt,name=index,proto3" json:"index,omitempty"`
 	Count     int32     `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`
@@ -759,6 +761,7 @@ func (m *SessionItem) GetPath() string {
 	return ""
 }
 
+// SessionPayload is the payload of a session
 type SessionPayload struct {
 	Payload   *Payload  `protobuf:"bytes,1,opt,name=payload,proto3" json:"payload,omitempty"`
 	Direction Direction `protobuf:"varint,2,opt,name=direction,proto3,enum=sonrio.motor.service.v1.Direction" json:"direction,omitempty"`

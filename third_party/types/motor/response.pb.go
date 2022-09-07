@@ -28,6 +28,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// The response message returned after initializing a Motor node.
 type InitializeResponse struct {
 	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 }
@@ -72,6 +73,7 @@ func (m *InitializeResponse) GetSuccess() bool {
 	return false
 }
 
+// The message returned after an Account is created.
 type CreateAccountResponse struct {
 	AesPsk      []byte       `protobuf:"bytes,1,opt,name=aes_psk,json=aesPsk,proto3" json:"aes_psk,omitempty"`
 	Address     string       `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
@@ -140,6 +142,7 @@ func (m *CreateAccountResponse) GetWhoIs() *types.WhoIs {
 	return nil
 }
 
+// The message returned after a user is logged in.
 type LoginResponse struct {
 	Success bool         `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 	WhoIs   *types.WhoIs `protobuf:"bytes,2,opt,name=who_is,json=whoIs,proto3" json:"who_is,omitempty"`
@@ -192,6 +195,7 @@ func (m *LoginResponse) GetWhoIs() *types.WhoIs {
 	return nil
 }
 
+// The message returned after a schema is created.
 type CreateSchemaResponse struct {
 	Status int32          `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
 	WhatIs *types1.WhatIs `protobuf:"bytes,2,opt,name=what_is,json=whatIs,proto3" json:"what_is,omitempty"`
@@ -244,11 +248,16 @@ func (m *CreateSchemaResponse) GetWhatIs() *types1.WhatIs {
 	return nil
 }
 
+// The message returned after a generic query is made.
 type QueryResponse struct {
-	Code    int32                   `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
-	Query   string                  `protobuf:"bytes,2,opt,name=query,proto3" json:"query,omitempty"`
-	Module  common.BlockchainModule `protobuf:"varint,3,opt,name=module,proto3,enum=sonrio.common.v1.BlockchainModule" json:"module,omitempty"`
-	Results []*QueryResultItem      `protobuf:"bytes,4,rep,name=results,proto3" json:"results,omitempty"`
+	// The status of the method call.
+	Code int32 `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
+	// The provided query.
+	Query string `protobuf:"bytes,2,opt,name=query,proto3" json:"query,omitempty"`
+	// The provided query module
+	Module common.BlockchainModule `protobuf:"varint,3,opt,name=module,proto3,enum=sonrio.common.v1.BlockchainModule" json:"module,omitempty"`
+	// The result of the query.
+	Results []*QueryResultItem `protobuf:"bytes,4,rep,name=results,proto3" json:"results,omitempty"`
 }
 
 func (m *QueryResponse) Reset()         { *m = QueryResponse{} }
@@ -312,14 +321,22 @@ func (m *QueryResponse) GetResults() []*QueryResultItem {
 	return nil
 }
 
+// An item in the QueryResponse.
 type QueryResultItem struct {
-	Did              string                   `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
-	Kind             common.EntityKind        `protobuf:"varint,2,opt,name=kind,proto3,enum=sonrio.common.v1.EntityKind" json:"kind,omitempty"`
-	WhoIs            *types.WhoIs             `protobuf:"bytes,3,opt,name=who_is,json=whoIs,proto3" json:"who_is,omitempty"`
-	WhatIs           *types1.WhatIs           `protobuf:"bytes,4,opt,name=what_is,json=whatIs,proto3" json:"what_is,omitempty"`
+	// The identifier of the query result item
+	Did string `protobuf:"bytes,1,opt,name=did,proto3" json:"did,omitempty"`
+	// The type of the query result item
+	Kind common.EntityKind `protobuf:"varint,2,opt,name=kind,proto3,enum=sonrio.common.v1.EntityKind" json:"kind,omitempty"`
+	// An optional whoIs result item
+	WhoIs *types.WhoIs `protobuf:"bytes,3,opt,name=who_is,json=whoIs,proto3" json:"who_is,omitempty"`
+	// An optional whatIs result item
+	WhatIs *types1.WhatIs `protobuf:"bytes,4,opt,name=what_is,json=whatIs,proto3" json:"what_is,omitempty"`
+	// An optional schemaDefinition result item
 	SchemaDefinition *types1.SchemaDefinition `protobuf:"bytes,5,opt,name=schema_definition,json=schemaDefinition,proto3" json:"schema_definition,omitempty"`
-	WhereIs          *types2.WhereIs          `protobuf:"bytes,6,opt,name=where_is,json=whereIs,proto3" json:"where_is,omitempty"`
-	WhereIsList      []*types2.WhereIs        `protobuf:"bytes,7,rep,name=where_is_list,json=whereIsList,proto3" json:"where_is_list,omitempty"`
+	// An optional whereIs result item
+	WhereIs *types2.WhereIs `protobuf:"bytes,6,opt,name=where_is,json=whereIs,proto3" json:"where_is,omitempty"`
+	// An optional list of buckets
+	WhereIsList []*types2.WhereIs `protobuf:"bytes,7,rep,name=where_is_list,json=whereIsList,proto3" json:"where_is_list,omitempty"`
 }
 
 func (m *QueryResultItem) Reset()         { *m = QueryResultItem{} }
@@ -404,6 +421,7 @@ func (m *QueryResultItem) GetWhereIsList() []*types2.WhereIs {
 	return nil
 }
 
+// This is the message response for querying a whoIs by did
 type QueryWhoIsResponse struct {
 	Code  int32        `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
 	WhoIs *types.WhoIs `protobuf:"bytes,2,opt,name=who_is,json=whoIs,proto3" json:"who_is,omitempty"`
@@ -456,6 +474,7 @@ func (m *QueryWhoIsResponse) GetWhoIs() *types.WhoIs {
 	return nil
 }
 
+// This is the message response for querying a whatIs by did and creator
 type QueryWhatIsResponse struct {
 	Code   int32                    `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
 	WhatIs *types1.WhatIs           `protobuf:"bytes,2,opt,name=what_is,json=whatIs,proto3" json:"what_is,omitempty"`
@@ -516,6 +535,7 @@ func (m *QueryWhatIsResponse) GetSchema() *types1.SchemaDefinition {
 	return nil
 }
 
+// This is the message response for querying a whoIs by did
 type QueryWhatIsByCreatorResponse struct {
 	Code    int32                               `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
 	WhatIs  []*types1.WhatIs                    `protobuf:"bytes,2,rep,name=what_is,json=whatIs,proto3" json:"what_is,omitempty"`

@@ -113,9 +113,12 @@ func (m *QueryParamsResponse) GetParams() Params {
 	return Params{}
 }
 
+// QueryGetWhereIsRequest is the message request to query a WhereIs by did and creator.
 type QueryGetWhereIsRequest struct {
+	// Creator is the account address of the owner of the WhereIs.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Did     string `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
+	// Did is the DID of the WhereIs.
+	Did string `protobuf:"bytes,2,opt,name=did,proto3" json:"did,omitempty"`
 }
 
 func (m *QueryGetWhereIsRequest) Reset()         { *m = QueryGetWhereIsRequest{} }
@@ -165,7 +168,9 @@ func (m *QueryGetWhereIsRequest) GetDid() string {
 	return ""
 }
 
+// QueryGetWhereIsResponse is the message response for querying a WhereIs by did and creator.
 type QueryGetWhereIsResponse struct {
+	// The blockchain record for the bucket.
 	WhereIs WhereIs `protobuf:"bytes,1,opt,name=where_is,json=whereIs,proto3" json:"where_is"`
 }
 
@@ -209,8 +214,11 @@ func (m *QueryGetWhereIsResponse) GetWhereIs() WhereIs {
 	return WhereIs{}
 }
 
+// QueryGetWhereIsByCreatorRequest is the message request to query a WhereIs by creator.
 type QueryGetWhereIsByCreatorRequest struct {
-	Creator    string             `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	// Creator is the account address of the owner of the WhereIs.
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	// Pagination defines an optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -261,8 +269,11 @@ func (m *QueryGetWhereIsByCreatorRequest) GetPagination() *query.PageRequest {
 	return nil
 }
 
+// QueryGetWhereIsByCreatorResponse is the message response for querying a WhereIs by creator.
 type QueryGetWhereIsByCreatorResponse struct {
-	WhereIs    []WhereIs           `protobuf:"bytes,1,rep,name=where_is,json=whereIs,proto3" json:"where_is"`
+	// The blockchain record for the bucket.
+	WhereIs []WhereIs `protobuf:"bytes,1,rep,name=where_is,json=whereIs,proto3" json:"where_is"`
+	// Pagination defines the pagination in the response.
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -313,7 +324,9 @@ func (m *QueryGetWhereIsByCreatorResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
+// QueryAllWhereIsRequest is request type for the Query/WhereIsAll RPC method.
 type QueryAllWhereIsRequest struct {
+	// Pagination defines an optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -357,8 +370,11 @@ func (m *QueryAllWhereIsRequest) GetPagination() *query.PageRequest {
 	return nil
 }
 
+// QueryAllWhereIsResponse is response type for the Query/WhereIsAll RPC method.
 type QueryAllWhereIsResponse struct {
-	WhereIs    []WhereIs           `protobuf:"bytes,1,rep,name=where_is,json=whereIs,proto3" json:"where_is"`
+	// List of Bucket records.
+	WhereIs []WhereIs `protobuf:"bytes,1,rep,name=where_is,json=whereIs,proto3" json:"where_is"`
+	// Pagination defines the pagination in the response.
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -477,11 +493,11 @@ const _ = grpc.SupportPackageIsVersion4
 type QueryClient interface {
 	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
-	// Queries a WhereIs by did and creator.
+	// Queries a Bucket record by did and creator.
 	WhereIs(ctx context.Context, in *QueryGetWhereIsRequest, opts ...grpc.CallOption) (*QueryGetWhereIsResponse, error)
-	// Queries all WhereIs by creator.
+	// Queries all buckets for the given creator.
 	WhereIsByCreator(ctx context.Context, in *QueryGetWhereIsByCreatorRequest, opts ...grpc.CallOption) (*QueryGetWhereIsByCreatorResponse, error)
-	// Queries a list of WhereIs items.
+	// Returns all buckets stored in the state.
 	WhereIsAll(ctx context.Context, in *QueryAllWhereIsRequest, opts ...grpc.CallOption) (*QueryAllWhereIsResponse, error)
 }
 
@@ -533,11 +549,11 @@ func (c *queryClient) WhereIsAll(ctx context.Context, in *QueryAllWhereIsRequest
 type QueryServer interface {
 	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
-	// Queries a WhereIs by did and creator.
+	// Queries a Bucket record by did and creator.
 	WhereIs(context.Context, *QueryGetWhereIsRequest) (*QueryGetWhereIsResponse, error)
-	// Queries all WhereIs by creator.
+	// Queries all buckets for the given creator.
 	WhereIsByCreator(context.Context, *QueryGetWhereIsByCreatorRequest) (*QueryGetWhereIsByCreatorResponse, error)
-	// Queries a list of WhereIs items.
+	// Returns all buckets stored in the state.
 	WhereIsAll(context.Context, *QueryAllWhereIsRequest) (*QueryAllWhereIsResponse, error)
 }
 
