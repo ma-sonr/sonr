@@ -6,10 +6,11 @@ import (
 	"github.com/sonr-io/multi-party-sig/pkg/math/curve"
 	"github.com/sonr-io/multi-party-sig/pkg/party"
 	"github.com/sonr-io/multi-party-sig/protocols/cmp"
+	kr "github.com/sonr-io/sonr/internal/keyring"
 	"github.com/sonr-io/sonr/pkg/crypto/mpc"
 	"github.com/sonr-io/sonr/pkg/did"
-	mt "github.com/sonr-io/sonr/pkg/motor/types"
 	"github.com/sonr-io/sonr/pkg/vault"
+	mt "github.com/sonr-io/sonr/third_party/types/motor/api/v1"
 )
 
 // Login creates a motor node from a LoginRequest
@@ -21,14 +22,13 @@ func (mtr *motorNodeImpl) Login(request mt.LoginRequest) (mt.LoginResponse, erro
 	mtr.Address = request.Did
 
 	// fetch vault shards
-	fmt.Printf("fetching shards from vault... ")
+	mtr.callback.OnMotorEvent("Fetching shards from vault", false)
 	shards, err := vault.New().GetVaultShards(request.Did)
 	if err != nil {
 		return mt.LoginResponse{}, fmt.Errorf("error getting vault shards: %s", err)
 	}
-	fmt.Println("done.")
 
-	fmt.Printf("reconstructing wallet... ")
+	mtr.callback.OnMotorEvent("Reconstructing wallet", false)
 	cnfgs, err := createWalletConfigs(mtr.DeviceID, request, shards)
 	if err != nil {
 		return mt.LoginResponse{}, fmt.Errorf("error creating preferred config: %s", err)
@@ -38,9 +38,9 @@ func (mtr *motorNodeImpl) Login(request mt.LoginRequest) (mt.LoginResponse, erro
 	if err = initMotor(mtr, mpc.WithConfigs(cnfgs)); err != nil {
 		return mt.LoginResponse{}, fmt.Errorf("error generating wallet: %s", err)
 	}
-	fmt.Println("done.")
 
 	// fetch DID document from chain
+	mtr.callback.OnMotorEvent("Verifying with Blockchain", false)
 	whoIs, err := mtr.Cosmos.QueryWhoIs(request.Did)
 	if err != nil {
 		return mt.LoginResponse{}, fmt.Errorf("error fetching whois: %s", err)
@@ -58,7 +58,7 @@ func (mtr *motorNodeImpl) Login(request mt.LoginRequest) (mt.LoginResponse, erro
 	mtr.sharedShard = shards.PskShard
 	mtr.recoveryShard = shards.RecoveryShard
 	mtr.unusedShards = destructureShards(shards.ShardBank)
-
+	mtr.callback.OnMotorEvent("Logged into account successfully!", true)
 	return mt.LoginResponse{
 		Success: true,
 	}, nil
@@ -66,6 +66,12 @@ func (mtr *motorNodeImpl) Login(request mt.LoginRequest) (mt.LoginResponse, erro
 
 func createWalletConfigs(id string, req mt.LoginRequest, shards vault.Vault) (map[party.ID]*cmp.Config, error) {
 	configs := make(map[party.ID]*cmp.Config)
+
+	// get PSK
+	psk, err := kr.GetPSK()
+	if err != nil {
+		return nil, fmt.Errorf("get PSK: %s", err)
+	}
 
 	// if a password is provided, prefer that over the DSC
 	if req.Password != "" {
@@ -80,12 +86,18 @@ func createWalletConfigs(id string, req mt.LoginRequest, shards vault.Vault) (ma
 			return nil, fmt.Errorf("recovery shard: %s", err)
 		}
 	} else {
+		// get DSC
+		dsc, err := kr.GetDSC()
+		if err != nil {
+			return nil, fmt.Errorf("get DSC: %s", err)
+		}
+
 		// build DSC Config if password is not provided
 		deviceShard, ok := shards.IssuedShards[id]
 		if !ok {
 			return nil, fmt.Errorf("could not find device shard with key '%s'", id)
 		}
-		dscShard, err := mpc.AesDecryptWithKey(req.AesDscKey, deviceShard)
+		dscShard, err := mpc.AesDecryptWithKey(dsc, deviceShard)
 		if err != nil {
 			return nil, fmt.Errorf("error decrypting DSC shard: %s", err)
 		}
@@ -97,7 +109,7 @@ func createWalletConfigs(id string, req mt.LoginRequest, shards vault.Vault) (ma
 	}
 
 	// in all cases, use the PSK
-	pskShard, err := mpc.AesDecryptWithKey(req.AesPskKey, shards.PskShard)
+	pskShard, err := mpc.AesDecryptWithKey(psk, shards.PskShard)
 	if err != nil {
 		return nil, fmt.Errorf("error decrypting PSK shard: %s", err)
 	}

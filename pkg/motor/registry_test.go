@@ -6,7 +6,8 @@ import (
 	"testing"
 
 	"github.com/sonr-io/sonr/pkg/crypto/mpc"
-	mt "github.com/sonr-io/sonr/pkg/motor/types"
+	"github.com/sonr-io/sonr/third_party/types/common"
+	mt "github.com/sonr-io/sonr/third_party/types/motor/api/v1"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,18 +25,14 @@ func Test_CreateAccount(t *testing.T) {
 	}
 
 	req := mt.CreateAccountRequest{
-		Password:  "password123",
-		AesDscKey: aesKey,
+		Password: "password123",
 	}
 
-	m := EmptyMotor("test_device")
-	res, err := m.CreateAccount(req)
+	m, _ := EmptyMotor(&mt.InitializeRequest{
+		DeviceId: "test_device",
+	}, common.DefaultCallback())
+	_, err := m.CreateAccount(req)
 	assert.NoError(t, err, "wallet generation succeeds")
-
-	// write the PSK to local file system for later use
-	if err == nil {
-		fmt.Printf("stored psk? %v\n", storeKey(fmt.Sprintf("psk%s", m.Address), res.AesPsk))
-	}
 
 	b := m.GetBalance()
 	log.Println("balance:", b)
@@ -53,12 +50,13 @@ func Test_Login(t *testing.T) {
 		}
 
 		req := mt.LoginRequest{
-			Did:       ADDR,
-			Password:  "password123",
-			AesPskKey: pskKey,
+			Did:      ADDR,
+			Password: "password123",
 		}
 
-		m := EmptyMotor("test_device")
+		m, _ := EmptyMotor(&mt.InitializeRequest{
+			DeviceId: "test_device",
+		}, common.DefaultCallback())
 		_, err := m.Login(req)
 		assert.NoError(t, err, "login succeeds")
 
@@ -83,12 +81,12 @@ func Test_Login(t *testing.T) {
 		}
 
 		req := mt.LoginRequest{
-			Did:       ADDR,
-			AesDscKey: aesKey,
-			AesPskKey: pskKey,
+			Did: ADDR,
 		}
 
-		m := EmptyMotor("test_device")
+		m, _ := EmptyMotor(&mt.InitializeRequest{
+			DeviceId: "test_device",
+		}, common.DefaultCallback())
 		_, err := m.Login(req)
 		assert.NoError(t, err, "login succeeds")
 
@@ -107,12 +105,13 @@ func Test_LoginAndMakeRequest(t *testing.T) {
 	}
 
 	req := mt.LoginRequest{
-		Did:       ADDR,
-		Password:  "password123",
-		AesPskKey: pskKey,
+		Did:      ADDR,
+		Password: "password123",
 	}
 
-	m := EmptyMotor("test_device")
+	m, _ := EmptyMotor(&mt.InitializeRequest{
+		DeviceId: "test_device",
+	}, common.DefaultCallback())
 	_, err := m.Login(req)
 	assert.NoError(t, err, "login succeeds")
 
