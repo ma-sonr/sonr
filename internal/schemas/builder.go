@@ -192,6 +192,20 @@ func (as *schemaImpl) BuildNodeFromList(lst []interface{}) (datamodel.Node, erro
 		case string:
 			lstItem := interface{}(val).(string)
 			la.AssembleValue().AssignString(lstItem)
+		case map[string]string:
+			value := interface{}(val).(map[string]string)
+			np := basicnode.Prototype.Any
+			nb := np.NewBuilder() // Create a builder.
+			massem, _ := nb.BeginMap(int64(len(value)))
+
+			for k, v := range value {
+				massem.AssembleKey().AssignString(k)
+				massem.AssembleValue().AssignString(v)
+			}
+			massem.Finish()
+			n := nb.Build()
+			la.AssembleValue().AssignNode(n)
+
 		}
 	}
 	err = la.Finish()
