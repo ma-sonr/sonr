@@ -151,12 +151,12 @@ func Test_IPLD_Nodes(t *testing.T) {
 		Client: client.NewClient(client.ConnEndpointType_LOCAL),
 	}
 	t.Run("Should build Nodes and store in map", func(t *testing.T) {
-		whatIs, def := CreateMocks("snr12345", "did:snr:1234")
-		def.Fields = append(def.Fields, &st.SchemaKindDefinition{
+		whatIs, _ := CreateMocks("snr12345", "did:snr:1234")
+		whatIs.Schema.Fields = append(whatIs.Schema.Fields, &st.SchemaKindDefinition{
 			Name:  "field-1",
 			Field: st.SchemaKind_INT,
 		})
-		def.Fields = append(def.Fields, &st.SchemaKindDefinition{
+		whatIs.Schema.Fields = append(whatIs.Schema.Fields, &st.SchemaKindDefinition{
 			Name:  "field-2",
 			Field: st.SchemaKind_FLOAT,
 		})
@@ -177,30 +177,30 @@ func Test_IPLD_Nodes(t *testing.T) {
 	})
 
 	t.Run("Should build Nodes from definition", func(t *testing.T) {
-		whatIs, def := CreateMocks("snr12345", "did:snr:1234")
+		whatIs, _ := CreateMocks("snr12345", "did:snr:1234")
 
-		def.Fields = append(def.Fields, &st.SchemaKindDefinition{
+		whatIs.Schema.Fields = append(whatIs.Schema.Fields, &st.SchemaKindDefinition{
 			Name:  "field-1",
 			Field: st.SchemaKind_INT,
 		})
-		def.Fields = append(def.Fields, &st.SchemaKindDefinition{
+		whatIs.Schema.Fields = append(whatIs.Schema.Fields, &st.SchemaKindDefinition{
 			Name:  "field-2",
 			Field: st.SchemaKind_FLOAT,
 		})
-		def.Fields = append(def.Fields, &st.SchemaKindDefinition{
+		whatIs.Schema.Fields = append(whatIs.Schema.Fields, &st.SchemaKindDefinition{
 			Name:  "field-3",
 			Field: st.SchemaKind_LIST,
 		})
 
-		def.Fields = append(def.Fields, &st.SchemaKindDefinition{
+		whatIs.Schema.Fields = append(whatIs.Schema.Fields, &st.SchemaKindDefinition{
 			Name:  "field-4",
 			Field: st.SchemaKind_STRING,
 		})
-		def.Fields = append(def.Fields, &st.SchemaKindDefinition{
+		whatIs.Schema.Fields = append(whatIs.Schema.Fields, &st.SchemaKindDefinition{
 			Name:  "field-5",
 			Field: st.SchemaKind_LIST,
 		})
-		def.Fields = append(def.Fields, &st.SchemaKindDefinition{
+		whatIs.Schema.Fields = append(whatIs.Schema.Fields, &st.SchemaKindDefinition{
 			Name:  "field-6",
 			Field: st.SchemaKind_LIST,
 		})
