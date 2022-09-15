@@ -11,6 +11,7 @@ import (
 )
 
 func Test_FaucetCheckBalance(t *testing.T) {
+	t.Skip("skipping in ci")
 	// Create Client instance and Generate wallet
 	client := NewClient(ConnEndpointType_BETA)
 	w, err := mpc.GenerateWallet(common.DefaultCallback())
@@ -35,6 +36,7 @@ func Test_FaucetCheckBalance(t *testing.T) {
 }
 
 func Test_QueryWhoIs(t *testing.T) {
+	t.Skip("skipping in ci")
 	accAddr := "snr1xurfhe4cfu29k04r6rlmaqcrjzef2le46qy9rm"
 	client := NewClient(ConnEndpointType_BETA)
 	acc, err := client.QueryWhoIs(accAddr)

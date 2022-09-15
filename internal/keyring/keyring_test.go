@@ -7,6 +7,7 @@ import (
 )
 
 func Test_DSC(t *testing.T) {
+	t.Skip("skipping in ci")
 	newDsc, err := CreateDSC()
 	assert.NoError(t, err, "create DSC")
 
@@ -17,6 +18,7 @@ func Test_DSC(t *testing.T) {
 }
 
 func Test_PSK(t *testing.T) {
+	t.Skip("skipping in ci")
 	newPsk, err := CreatePSK()
 	assert.NoError(t, err, "create PSK")
 

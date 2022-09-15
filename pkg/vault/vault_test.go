@@ -11,6 +11,8 @@ import (
 )
 
 func Test_CreateVault(t *testing.T) {
+	t.Skip("skipping in ci")
+
 	deviceShards := [][]byte{
 		{2, 2, 2, 2, 2},
 	}
@@ -24,6 +26,8 @@ func Test_CreateVault(t *testing.T) {
 }
 
 func Test_GetVault(t *testing.T) {
+	t.Skip("skipping in ci")
+
 	res, err := http.Get("http://127.0.0.1:1234/cid/QmPocYs5qTF7YCri5YH9eAe7DJ84CgZaz4wogNGWKmpVBv/get")
 	assert.NoError(t, err, "GET succeeds")
 	defer res.Body.Close()

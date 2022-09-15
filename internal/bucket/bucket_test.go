@@ -27,7 +27,7 @@ func CreateMockWhereIs(creator string, content []*bt.BucketItem) *bt.WhereIs {
 }
 
 func Test_Bucket(t *testing.T) {
-
+	t.Skip("skip in ci")
 	creator := "snr1ld9u3wpq752wmqaus5rzcfanqg65sgldhnscx5"
 	objectURI := "bafyreihnj3feeesb6wmd46lmsvtwalvuckns647ghy44xn63lfsfed3ydm"
 	s := shell.NewLocalShell()

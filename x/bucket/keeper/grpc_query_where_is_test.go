@@ -1,10 +1,10 @@
 package keeper_test
 
 import (
+	"errors"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
@@ -38,7 +38,7 @@ func TestWhereIsQuerySingle(t *testing.T) {
 		{
 			desc:    "KeyNotFound",
 			request: &types.QueryGetWhereIsRequest{Did: "not-found"},
-			err:     sdkerrors.ErrKeyNotFound,
+			err:     errors.New("error while querying whereIs: not-found key not found"),
 		},
 		{
 			desc: "InvalidRequest",
