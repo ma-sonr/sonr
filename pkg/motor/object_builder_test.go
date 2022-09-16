@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/sonr-io/sonr/third_party/types/common"
-	mt "github.com/sonr-io/sonr/third_party/types/motor"
+	mt "github.com/sonr-io/sonr/third_party/types/motor/api/v1"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,9 +30,8 @@ func Test_ObjectBuilder(t *testing.T) {
 		}
 
 		req := mt.LoginRequest{
-			Did:       ADDR,
-			Password:  "password123",
-			AesPskKey: pskKey,
+			Did:      ADDR,
+			Password: "password123",
 		}
 
 		m, _ := EmptyMotor(&mt.InitializeRequest{
