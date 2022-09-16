@@ -16,6 +16,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.11.3 // indirect
 	github.com/hsanjuan/ipfs-lite v1.4.0
 	github.com/ignite-hq/cli v0.22.0
 	github.com/ipfs/go-cid v0.2.0
@@ -40,6 +41,7 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.12.2
+	github.com/regen-network/cosmos-proto v0.3.1 // indirect
 	github.com/shengdoushi/base58 v1.0.0
 	github.com/sonr-io/keyring v1.2.2-0.20220701165800-b4428a8aad16 // indirect
 	github.com/sonr-io/multi-party-sig v0.7.0

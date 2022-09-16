@@ -13,6 +13,7 @@ import (
 
 type MotorCallback interface {
 	OnDiscover(data []byte)
+	OnWalletEvent(data []byte)
 }
 
 var (

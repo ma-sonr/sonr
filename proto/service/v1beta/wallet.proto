@@ -4,14 +4,15 @@ syntax = "proto3";
 package sonrio.motor.service.v1beta;
 
 import "registry/did.proto";
+import "registry/who_is.proto";
 
-option go_package = "github.com/sonr-io/sonr/third_party/types/motor/api/v1/service/v1beta";
+option go_package = "github.com/sonr-io/sonr/third_party/types/motor/service/v1beta";
 
 message WalletEvent {
     WalletEventType type = 1;
     string address = 2; // optional
     sonrio.sonr.registry.DIDDocument did_document = 3; // optional
-    string tx_hash = 4; // optional
+    sonrio.sonr.registry.WhoIs who_is = 4; // optional
 }
 
 enum WalletEventType {
