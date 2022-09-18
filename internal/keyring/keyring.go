@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	SERVICE_NAME_KEY = "SONR_MOTOR_KEYRING"
-	KEYCHAIN_NAME    = "SONR_MOTOR_KEYCHAIN"
+	SERVICE_NAME_KEY = "SONR_MOTOR_KEYRING_TEST"
+	FILE_DIR         = "~/.speedwday"
 
 	DSC_KEY = "DEVICE_SPECIFIC_CREDENTIAL"
 	PSK_KEY = "PRESHARED_KEY"
@@ -96,7 +96,7 @@ func GetPSK() ([]byte, error) {
 
 func openKeyring() (kr.Keyring, error) {
 	return kr.Open(kr.Config{
-		ServiceName:  SERVICE_NAME_KEY,
-		KeychainName: KEYCHAIN_NAME,
+		ServiceName: SERVICE_NAME_KEY,
+		FileDir:     FILE_DIR,
 	})
 }
