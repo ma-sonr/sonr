@@ -1,9 +1,9 @@
 syntax = "proto3";
 
-package sonrio.sonr.schema;
+package sonrio.sonr.schema.v2;
 
-import "schema/v1/schema.proto";
-import "schema/v1/what_is.proto";
+import "schema/v2/schema.proto";
+import "schema/v2/what_is.proto";
 
 // this line is used by starport scaffolding # proto/tx/import
 option go_package = "github.com/sonr-io/sonr/x/schema/types";
@@ -12,12 +12,6 @@ option java_package = "io.sonr.types.schema";
 
 // Msg defines the Msg service.
 service Msg {
-  // CreateSchema defines a new on-chain schema.
-  rpc CreateSchema(MsgCreateSchema) returns (MsgCreateSchemaResponse);
-
-  // DeprecateSchema deactivates a schema.
-  rpc DeprecateSchema(MsgDeprecateSchema) returns (MsgDeprecateSchemaResponse);
-
   // CreateWhatIs defines a new on-chain WhatIs definition for a Verifiable Data Model.
   rpc CreateWhatIs(MsgCreateWhatIs) returns (MsgCreateWhatIsResponse);
 
@@ -25,54 +19,21 @@ service Msg {
   rpc DeprecateWhatIs(MsgDeprecateWhatIs) returns (MsgDeprecateWhatIsResponse);
 }
 
-message MsgCreateSchema {
-  // Address of the creator account
-  // can be an application address or user address
-  string creator = 1;
-
-  // label for the schema.
-  string label = 2;
-
-  // List of Kind Definitions for the schema
-  repeated SchemaKindDefinition fields = 3;
-
-  // Metadata is a map of key-value pairs that can be used to store additional information about the WhatIs (Schema)
-  repeated MetadataDefintion metadata = 4;
-}
-
-message MsgCreateSchemaResponse {
-  // Status code of the response
-  int32 code = 1;
-
-  string message = 2;
-
-  // WhatIs object created on chain
-  WhatIs what_is = 3;
-}
-
-message MsgDeprecateSchema {
-  string creator = 1;
-  string did = 2;
-}
-
-message MsgDeprecateSchemaResponse {
-  int32 code = 1;
-  string message = 2;
-}
-
 message MsgCreateWhatIs {
   // Address of the creator account
   // can be an application address or user address
   string creator = 1;
 
+  string application_did = 2;
+
   // label for the schema.
-  string label = 2;
+  string label = 3;
 
   // List of Kind Definitions for the schema
-  repeated SchemaKindDefinition fields = 3;
+  SchemaDefinition definition = 4;
 
   // Metadata is a map of key-value pairs that can be used to store additional information about the WhatIs (Schema)
-  repeated MetadataDefintion metadata = 4;
+  map<string, string> metadata = 5;
 }
 
 message MsgCreateWhatIsResponse {

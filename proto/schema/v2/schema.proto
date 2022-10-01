@@ -1,0 +1,107 @@
+syntax = "proto3";
+
+package sonrio.sonr.schema.v2;
+
+option go_package = "github.com/sonr-io/sonr/x/schema/types";
+option java_multiple_files = true;
+option java_package = "io.sonr.types.schema";
+
+// PropertyKind represents the type of primitive a provided Definition field is using
+enum PropertyKind {
+  LIST = 0;
+  BOOL = 1;
+  INT = 2;
+  FLOAT = 3;
+  STRING = 4;
+  BYTES = 5;
+  CID = 6;
+  DID = 7;
+  REF = 8;
+  ANY = 9;
+}
+
+// Defines a schema and additional metadata related to the definition
+message SchemaDefinition {
+  // The DID for this schema should not be populated by request
+  string did = 1;
+
+  // an alternative reference point
+  string label = 2;
+
+  // the properties of this schema
+  repeated SchemaDefinitionProperty properties = 3;
+}
+
+
+//  Defines a type for a given property within a Schema types conform to the IPLD Kind defintion https://ipld.io/docs/data-model/kinds/
+message SchemaDefinitionProperty {
+  // Name of the property
+  string name = 1;
+
+  // Type of a single schema property
+  PropertyKind kind = 2;
+
+  // String to denote URI for Link, should be defined if field is of type 'LINK'
+  string link = 3;
+
+  // optional field if field is of Kind List to define item types.
+  PropertyKind list_kind = 4;
+}
+
+
+message SchemaDocument {
+  // the DID for this schema should not be populated by request
+  string did = 1;
+
+  string cid = 2;
+
+  string creator = 3;
+
+  // the properties of this schemadocument
+  repeated SchemaDocumentValue entries = 4;
+}
+
+message SchemaDocumentValue {
+  string name = 1;
+    // Type of a single schema property
+    PropertyKind kind = 2;
+
+    // The value of the field
+    BoolValue bool_value = 3; // optional
+    StringValue string_value = 4; // optional
+    IntValue int_value = 5; // optional
+    FloatValue float_value = 6; // optional
+    BytesValue bytes_value = 7; // optional
+    LinkValue link_value = 8; // optional
+    ArrayValue array_value = 9; // optional
+
+  message BoolValue {
+    bool value = 1;
+  }
+  message StringValue {
+      string value = 1;
+  }
+
+  message IntValue {
+      int32 value = 1;
+  }
+
+  message FloatValue {
+      double value = 1;
+  }
+
+  message BytesValue {
+      bytes value = 1;
+  }
+
+  message LinkValue {
+      PropertyKind link_kind = 1;
+      string value = 2;
+  }
+
+  message ArrayValue {
+      PropertyKind array_kind = 1;
+      repeated SchemaDocumentValue value = 2;
+  }
+
+}

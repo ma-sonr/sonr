@@ -1,12 +1,12 @@
 syntax = "proto3";
 
-package sonrio.sonr.schema;
+package sonrio.sonr.schema.v2;
 
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
-import "schema/v1/params.proto";
-import "schema/v1/schema.proto";
+import "schema/v2/params.proto";
+import "schema/v2/schema.proto";
 // this line is used by starport scaffolding # 1
 
 import "schema/v1/what_is.proto";
@@ -36,6 +36,11 @@ service Query {
   // Queries a whatis by creator
   rpc WhatIsByCreator(QueryWhatIsCreatorRequest) returns (QueryWhatIsCreatorResponse) {
     option (google.api.http).get = "/sonr-io/sonr/schema/what_is_creator/{creator}";
+  }
+
+  // Queries a whatis by creator
+  rpc WhatIsByCreatorLabel(QueryWhatIsCreatorLabelRequest) returns (QueryWhatIsCreatorLabelResponse) {
+    option (google.api.http).get = "/sonr-io/sonr/schema/what_is_creator/{creator}/{label}";
   }
 
   // this line is used by starport scaffolding # 2
@@ -82,6 +87,20 @@ message QueryWhatIsCreatorRequest {
 
 // Returns a list of SchemaDefinitions by a given creator
 message QueryWhatIsCreatorResponse {
+  // Schema Repersentation
+  repeated WhatIs what_is = 1;
+}
+
+// Request used to find all SchemaDefinitions by a given creator
+message QueryWhatIsCreatorLabelRequest {
+  // address of the schema creator
+  string creator = 1;
+  // pageination values
+  string label = 2;
+}
+
+// Returns a list of SchemaDefinitions by a given creator
+message QueryWhatIsCreatorLabelResponse {
   // Schema Repersentation
   repeated WhatIs what_is = 1;
 }

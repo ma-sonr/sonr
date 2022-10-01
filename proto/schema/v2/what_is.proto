@@ -1,26 +1,26 @@
 syntax = "proto3";
 
-package sonrio.sonr.schema;
+package sonrio.sonr.schema.v2;
 
-import "schema/v1/schema.proto";
+import "schema/v2/schema.proto";
 
 option go_package = "github.com/sonr-io/sonr/x/schema/types";
 option java_multiple_files = true;
 option java_package = "io.sonr.types.schema";
 
-// Wrapper struct around a SchemaDefiniton for on-chain representation of Data models. 
+// Wrapper struct around a SchemaDefiniton for on-chain representation of Data models.
 message WhatIs {
   // DID is the DID of the object
   string did = 1;
 
+  // Application DID is the DID of the application that owns the object
+  string application_did = 2;
+
   // Object_doc is the object document
-  SchemaDefinition schema = 2;
+  SchemaDefinition definition = 3;
 
   // Creator is the DID of the creator
-  string creator = 3;
-
-  // Timestamp is the time of the last update of the DID Document
-  int64 timestamp = 4;
+  string creator = 4;
 
   // IsActive is the status of the DID Document
   bool is_active = 5;

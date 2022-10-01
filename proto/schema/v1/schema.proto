@@ -6,23 +6,21 @@ option go_package = "github.com/sonr-io/sonr/x/schema/types";
 option java_multiple_files = true;
 option java_package = "io.sonr.types.schema";
 
-enum LinkKind {
-  UNKNOWN = 0;
-  OBJECT = 1;
-  SCHEMA = 2;
-  BUCKET = 3;
+// Defines a schema and additional metadata related to the definition
+message SchemaDefinition {
+  // The DID for this schema should not be populated by request
+  string did = 1;
+
+  // The Creator address for the schema (from the wallet)
+  string creator = 2;
+
+  // an alternative reference point
+  string label = 3;
+
+  // the properties of this schema
+  repeated SchemaKindDefinition fields = 4;
 }
 
-enum SchemaKind {
-  LIST = 0;
-  BOOL = 1;
-  INT = 2;
-  FLOAT = 3;
-  STRING = 4;
-  BYTES = 5;
-  LINK = 6;
-  ANY = 7;
-}
 
 // Defines key value pairs for indexable metadata related to the schema
 message MetadataDefintion {
@@ -51,10 +49,7 @@ message SchemaItemKindDefinition {
   string link = 4;
 }
 
-/*
-  Defines a type for a given property within a Schema types conform to the IPLD Kind defintion
-  https://ipld.io/docs/data-model/kinds/
-*/
+//  Defines a type for a given property within a Schema types conform to the IPLD Kind defintion https://ipld.io/docs/data-model/kinds/
 message SchemaKindDefinition {
   // Name of the property
   string name = 1;
@@ -72,19 +67,82 @@ message SchemaKindDefinition {
   SchemaItemKindDefinition item = 5;
 }
 
-/*
-  Defines a schema and additional metadata related to the definition
-*/
-message SchemaDefinition {
-  // The DID for this schema should not be populated by request
+enum LinkKind {
+  UNKNOWN = 0;
+  OBJECT = 1;
+  SCHEMA = 2;
+  BUCKET = 3;
+}
+
+enum SchemaKind {
+  LIST = 0;
+  BOOL = 1;
+  INT = 2;
+  FLOAT = 3;
+  STRING = 4;
+  BYTES = 5;
+  LINK = 6;
+  ANY = 7;
+}
+
+
+message SchemaDocument {
+  // the DID for this schema should not be populated by request
   string did = 1;
 
-  // The Creator address for the schema (from the wallet)
-  string creator = 2;
+  string cid = 2;
 
-  // an alternative reference point
-  string label = 3;
+  string creator = 3;
 
-  // the properties of this schema
-  repeated SchemaKindDefinition fields = 4;
+  // The definition of the document used to build the values
+  SchemaDefinition definition = 4;
+
+  // the properties of this schemadocument
+  repeated SchemaDocumentValue fields = 5;
+}
+
+
+message BoolValue {
+    bool value = 1;
+}
+
+message StringValue {
+    string value = 1;
+}
+
+message IntValue {
+    int32 value = 1;
+}
+
+message FloatValue {
+    double value = 1;
+}
+
+message BytesValue {
+    bytes value = 1;
+}
+
+message LinkValue {
+    LinkKind link = 1;
+    string value = 2;
+}
+
+message ArrayValue {
+    repeated SchemaDocumentValue value = 1;
+}
+
+
+message SchemaDocumentValue {
+    string name = 1;
+    // Type of a single schema property
+    SchemaKind field = 2;
+
+    // The value of the field
+    BoolValue bool_value = 3; // optional
+    StringValue string_value = 4; // optional
+    IntValue int_value = 5; // optional
+    FloatValue float_value = 6; // optional
+    BytesValue bytes_value = 7; // optional
+    LinkValue link_value = 8; // optional
+    ArrayValue array_value = 9; // optional
 }
